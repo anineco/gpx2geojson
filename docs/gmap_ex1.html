@@ -20,7 +20,7 @@ var param = {
 var map, ctaLayer;
 function initialize() {
   map = new google.maps.Map(document.getElementById(param.div), {
-    zoom: Number(param.zoom),
+    zoom: param.zoom,
     center: {lat: param.lat, lng: param.lng},
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     scaleControl: true
