@@ -4,26 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Googleマップ版ルート地図</title>
-</head>
-<body>
-<div id="map_google" style="width: 640px; height: 480px;"></div>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxcuxvdd1SeIgtubznQ_JC7e08BZrIHkk"></script>
+<style>
+#map_google {
+  width: 640px;
+  height: 480px;
+}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxcuxvdd1SeIgtubznQ_JC7e08BZrIHkk&language=ja&region=JP"></script>
 <script>
-  var param = {
-    div: 'map_google',
-    lng: 140.672862, lat: 37.864291, zoom: 15,
-    url: 'https://anineco.github.io/gpx2geojson/example/Mt_Hayama.kml'
-  };
-  var map = new google.maps.Map(document.getElementById(param.div), {
+var param = {
+  div: 'map_google',
+  lng: 140.672862, lat: 37.864291, zoom: 15,
+  url: 'https://anineco.github.io/gpx2geojson/example/Mt_Hayama.kml'
+};
+var map, ctaLayer;
+function initialize() {
+  map = new google.maps.Map(document.getElementById(param.div), {
     zoom: Number(param.zoom),
-    center: new google.maps.LatLng(param.lat, param.lng),
+    center: {lat: param.lat, lng: param.lng},
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     scaleControl: true
   });
-  var ctaLayer = new google.maps.KmlLayer(param.url, {
+  ctaLayer = new google.maps.KmlLayer(param.url, {
     preserveViewport: true
   });
   ctaLayer.setMap(map);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
 </script>
+</head>
+<body>
+<div id="map_google"></div>
 </body>
 </html>
