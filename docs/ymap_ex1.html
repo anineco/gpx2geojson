@@ -21,18 +21,18 @@ window.addEventListener('DOMContentLoaded', function() {
     lng: 140.672862, lat: 37.864291, zoom: 16,
     url: 'https://anineco.github.io/gpx2geojson/example/Mt_Hayama.kml'
   };
-  var ymap = new Y.Map(param.div);
-  ymap.removeLayerSet(Y.LayerSetId.B1); // 地下街
+  var map = new Y.Map(param.div);
+  map.removeLayerSet(Y.LayerSetId.B1); // 地下街
   var topographicLayerSet = new Y.LayerSet('地形図', [new Y.StyleMapLayer('topographic')]);
-  ymap.addLayerSet('MyTopographicLayerSet', topographicLayerSet);
-  ymap.setConfigure('scrollWheelZoom', true);
-  ymap.addControl(new Y.LayerSetControl());
-  ymap.addControl(new Y.ZoomControl());
-//  ymap.addControl(new Y.SliderZoomControlVertical());
-  ymap.addControl(new Y.ScaleControl());
-  ymap.drawMap(new Y.LatLng(param.lat, param.lng), param.zoom, 'MyTopographicLayerSet');
+  map.addLayerSet('MyTopographicLayerSet', topographicLayerSet);
+  map.setConfigure('scrollWheelZoom', true);
+  map.addControl(new Y.LayerSetControl());
+  map.addControl(new Y.ZoomControl());
+//  map.addControl(new Y.SliderZoomControlVertical());
+  map.addControl(new Y.ScaleControl());
+  map.drawMap(new Y.LatLng(param.lat, param.lng), param.zoom, 'MyTopographicLayerSet');
   var layer = new Y.GeoXmlLayer(param.url);
-  ymap.addLayer(layer);
+  map.addLayer(layer);
   layer.execute();
 });
 </script>
