@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bingマップ版ルート地図</title>
+<style>
+body {
+  margin: 0;
+}
+#map {
+  width: 640px;
+  height: 480px;
+}
+</style>
+<script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap" async defer></script>
+<script>
+var param = {
+  lon: 138.723460, lat: 35.931374, zoom: 13,
+  url: 'example/routemap.kml'
+};
+function GetMap() {
+  var map = new Microsoft.Maps.Map('#map', {
+    credentials: 'ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh',
+    center: new Microsoft.Maps.Location(param.lat, param.lon),
+    zoom: param.zoom
+  });
+  Microsoft.Maps.loadModule('Microsoft.Maps.GeoXml', function () {
+    layer = new Microsoft.Maps.GeoXmlLayer(param.url, null, { autoUpdateMapView: false });
+    map.layers.insert(layer);
+  });
+}
+</script>
+</head>
+<body>
+<div id="map"></div>
+</body>
+</html>

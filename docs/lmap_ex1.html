@@ -8,6 +8,9 @@
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin="">
 <style>
+body {
+  margin: 0;
+}
 #map {
   width: 640px;
   height: 480px;
@@ -56,9 +59,12 @@ window.addEventListener('DOMContentLoaded', function() {
   var ort = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', {
     attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>'
   });
+  var osm = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
   var kml = new L.KML(param.url).addTo(map);
   L.control.layers(
-    { '標準地図': std, '淡色地図': pale, '写真': ort },
+    { '標準地図': std, '淡色地図': pale, '写真': ort, 'OSM': osm },
     { 'GPSデータ': kml }
   ).addTo(map);
   L.control.scale({ imperial: false, metric: true }).addTo(map);

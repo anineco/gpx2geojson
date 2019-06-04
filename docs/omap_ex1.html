@@ -7,16 +7,13 @@
 <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
 <link rel="stylesheet" href="https://unpkg.com/ol-layerswitcher@3.2.0/src/ol-layerswitcher.css">
 <style>
+body {
+  margin: 0;
+}
 #map {
   position: absolute;
   width: 640px;
   height: 480px;
-}
-#crosshair {
-  position: absolute;
-  top: calc(50% - 12px);
-  left: calc(50% - 12px);
-  z-index: 1000;
 }
 .ol-popup {
   position: absolute;
@@ -86,9 +83,7 @@
 </style>
 </head>
 <body>
-<div id="map">
-<div id="crosshair"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAAADaua+7AAAABGdBTUEAALGPC/xhBQAAAAd0SU1FB+MDFRccILgT1pEAAAAGUExURf///4CAgGLM05UAAAABdFJOUwBA5thmAAAAAWJLR0QAiAUdSAAAABhJREFUCNdjYAABCQIYCupn/gNjOCCsDwAPsQWtV/NdHAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOS0wMy0yMVQxNDoyODozMiswOTowMH8FsWUAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTktMDMtMjFUMTQ6Mjg6MzIrMDk6MDAOWAnZAAAAAElFTkSuQmCC"></div>
-</div>
+<div id="map"></div>
 <div id="popup" class="ol-popup">
 <span id="popup-closer" class="ol-popup-closer"></span>
 <div id="popup-content"></div>
@@ -135,7 +130,7 @@ window.addEventListener('DOMContentLoaded', function() {
     visible: false,
     source: new ol.source.XYZ({
       attributions: ["&copy;", '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'],
-      url: '//tile.openstreetmap.jp/{z}/{x}/{y}.png'
+      url: 'https://tile.openstreetmap.jp/{z}/{x}/{y}.png'
     })
   });
   var kml = new ol.layer.Vector({
