@@ -35,6 +35,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var type = feature.getGeometry().getType();
     if (type === 'LineString') {
       return ({
+        clicable: false,
         strokeColor: feature.getProperty('_color'),
         strokeOpacity: feature.getProperty('_opacity'),
         strokeWeight: feature.getProperty('_weight')
@@ -44,6 +45,7 @@ window.addEventListener('DOMContentLoaded', function() {
       var s = feature.getProperty('_iconSize');
       var a = feature.getProperty('_iconAnchor');
       return ({
+        clicable: true,
         icon: {
           url: feature.getProperty('_iconUrl'),
           scaledSize: new google.maps.Size(s[0], s[1]),
@@ -52,6 +54,24 @@ window.addEventListener('DOMContentLoaded', function() {
         title: feature.getProperty('name')
       });
     }
+  });
+  var popup = new google.maps.InfoWindow();
+  map.data.addListener('click', function (event) {
+    var html = '<h2>' + event.feature.getProperty('name') + '</h2>';
+    var body = '';
+    event.feature.forEachProperty(function (value, key) {
+      console.log(key,':',value);
+      if (key !== 'geometry' && key !== 'name' && key.substr(0, 1) !== '_') {
+        body = body + '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+      }
+      if (body) {
+       html = html + '<table><tbody>' + body + '</tbody></table>';
+      }
+      popup.setContent(html);
+      popup.setPosition(event.latLng);
+      popup.setOptions({ pixelOffset: new google.maps.Size(0, -15) });
+      popup.open(map);
+    });
   });
 });
 </script>
