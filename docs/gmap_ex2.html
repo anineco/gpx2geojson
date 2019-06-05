@@ -32,6 +32,7 @@ window.addEventListener('DOMContentLoaded', function() {
   });
   map.data.loadGeoJson(param.url);
   map.data.setStyle(function (feature) {
+    console.log(feature);
     var type = feature.getProperty('type');
     if (type === 'polyline') {
       console.log('polyline');
