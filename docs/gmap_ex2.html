@@ -41,21 +41,15 @@ window.addEventListener('DOMContentLoaded', function() {
       });
     }
     if (type === 'Point') {
-      var url = feature.getProperty('_iconUrl');
-      console.log(url);
       return ({
-        icon: {
+        icon: new google.maps.Icon({
           url: feature.getProperty('_iconUrl'),
           anchor: feature.getProperty('_iconAnchor'),
           scaledSize: feature.getProperty('_iconSize')
-        },
+        }),
         title: feature.getProperty('name')
       });
     }
-  });
-  var popup = new google.maps.InfoWindow();
-  map.data.addListener('click', function (event) {
-
   });
 });
 </script>
