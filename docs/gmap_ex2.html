@@ -41,8 +41,14 @@ window.addEventListener('DOMContentLoaded', function() {
       });
     }
     if (type === 'Point') {
+      var s = feature.getProperty('_iconSize');
+      var a = feature.getProperty('_iconAnchor');
       return ({
-        icon: feature.getProperty('_iconUrl'),
+        icon: {
+          url: feature.getProperty('_iconUrl'),
+          scaledSize: new google.maps.Size(s[0], s[1]),
+          anchor: new google.maps.Point(a[0], a[1])
+        },
         title: feature.getProperty('name')
       });
     }
