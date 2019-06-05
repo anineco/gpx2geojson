@@ -41,8 +41,8 @@ window.addEventListener('DOMContentLoaded', function() {
       });
     }
     if (type === 'Point') {
-      var name = feature.getProperty('name');
-      console.log(name);
+      var url = feature.getProperty('_iconUrl');
+      console.log(url);
       return ({
         icon: {
           url: feature.getProperty('_iconUrl'),
