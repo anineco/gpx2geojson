@@ -83,7 +83,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     popup.setContent(html);
     popup.setPosition(event.latLng);
-    popup.setOptions({ pixelOffset: new google.maps.Size(0, -5) });
     popup.open(map);
   });
 });
