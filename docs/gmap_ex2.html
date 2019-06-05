@@ -33,10 +33,9 @@ window.addEventListener('DOMContentLoaded', function() {
   map.data.loadGeoJson(param.url);
   map.data.setStyle(function (feature) {
     var type = feature.getGeometry().getType();
-    console.log(feature);
-    console.log(feature.getGeometry());
-    console.log(type);
     if (type === 'LineString') {
+      var color = feature.getProperty('_color');
+      console.log(color);
       return ({
         strokeColor: feature.getProperty('_color'),
         strokeOpacity: feature.getProperty('_opacity'),
