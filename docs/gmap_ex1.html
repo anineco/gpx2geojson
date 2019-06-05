@@ -30,10 +30,10 @@ window.addEventListener('DOMContentLoaded', function() {
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     scaleControl: true
   });
-  var ctaLayer = new google.maps.KmlLayer(param.url, {
+  var track = new google.maps.KmlLayer(param.url, {
     preserveViewport: true
   });
-  ctaLayer.setMap(map);
+  track.setMap(map);
 });
 </script>
 </body>

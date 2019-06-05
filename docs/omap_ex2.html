@@ -95,7 +95,7 @@ window.addEventListener('DOMContentLoaded', function() {
   var param = {
     div: 'map',
     lon: 138.723460, lat: 35.931374, zoom: 13,
-    url: 'example/routemap.kml'
+    url: 'example/routemap.geojson'
   };
   var std = new ol.layer.Tile({
     title: '標準地図',
@@ -133,14 +133,54 @@ window.addEventListener('DOMContentLoaded', function() {
       url: 'https://tile.openstreetmap.jp/{z}/{x}/{y}.png'
     })
   });
+
+  var fill = new ol.style.Fill({color: 'blue'});
+  var stroke = new ol.style.Stroke({color: 'white', width: 2});
+
+  function styleFunction(feature) {
+    var style = {};
+    var type = feature.getGeometry().getType();
+    if (type === 'LineString') {
+      var color = feature.get('_color').match(/^#(..)(..)(..)$/).slice(1).map(function(h) {
+        return parseInt(h, 16);
+      });
+      color[3] = feature.get('_opacity');
+      style = {
+        stroke: new ol.style.Stroke({
+          color: color,
+          width: feature.get('_weight'),
+          lineDash: feature.get('_dashArray').split(',')
+        })
+      };
+    } else if (type === 'Point') {
+      style = {
+        image: new ol.style.Icon({
+          src: feature.get('_iconUrl'),
+          crossOrigin: 'Anonymous'
+        }),
+        text: new ol.style.Text({
+          text: feature.get('name'),
+          font: 'bold 12px sans-serif',
+          fill: fill,
+          stroke: stroke,
+          textAlign: 'left',
+          offsetX: 10,
+          offsetY: -10
+        })
+      };
+    }
+    return new ol.style.Style(style);
+  };
+
   var track = new ol.layer.Vector({
     title: 'GPSデータ',
     type: 'data',
     visible: true,
     source: new ol.source.Vector({
       url: param.url,
-      format: new ol.format.KML()
-    })
+      format: new ol.format.GeoJSON()
+    }),
+    style: styleFunction
   });
   var overlay = new ol.Overlay({
     element: document.getElementById('popup'),

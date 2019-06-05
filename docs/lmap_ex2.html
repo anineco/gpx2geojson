@@ -30,6 +30,12 @@ body {
   padding-right: 1em;
   color: blue;
 }
+.leaflet-tooltip {
+  margin: 0;
+  padding: 0;
+  background-color: rgba(255,255,255,0.5);
+  color: blue;
+}
 </style>
 </head>
 <body>
@@ -37,14 +43,12 @@ body {
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.0.3/layer/vector/KML.min.js"
-  integrity="sha256-rdhg2NTrgTzWKSR56WTaeowiaLCWQ3vuJTYBuA9dc7I=" crossorigin="anonymous"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
   var param = {
     div: 'map',
     lon: 138.723460, lat: 35.931374, zoom: 13,
-    url: 'example/routemap.kml'
+    url: 'example/routemap.geojson'
   };
   var map = L.map(param.div, {
     center: [param.lat, param.lon],
@@ -62,11 +66,57 @@ window.addEventListener('DOMContentLoaded', function() {
   var osm = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   });
-  var track = new L.KML(param.url).addTo(map);
-  L.control.layers(
-    { '標準地図': std, '淡色地図': pale, '写真': ort, 'OSM': osm },
-    { 'GPSデータ': track }
-  ).addTo(map);
+
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'json';
+  xhr.addEventListener('loadend', function (e) {
+    if (this.status === 200) {
+      var track = L.geoJSON(this.response, {
+        pointToLayer: function (feature, latlng) {
+          return L.marker(latlng, {
+            icon: L.icon({
+              iconUrl: feature.properties._iconUrl,
+              iconSize: feature.properties._iconSize,
+              iconAnchor: feature.properties._iconAnchor
+            })
+          }).bindTooltip(feature.properties.name, {
+            permanent: true,
+            direction: 'left',
+            offset: L.point(-15,0),
+            opacity: 0.8
+          });
+        },
+        style: function (feature) {
+          return {
+            color: feature.properties._color,
+            weight: feature.properties._weight,
+            dashArray: feature.properties._dashArray
+          };
+        }
+      }).bindPopup(function (layer) {
+        var properties = layer.feature.properties;
+        var html = '<h2>' + properties.name + '</h2>';
+        var keys = Object.keys(properties).filter(function (key) {
+          return key !== 'geometry' && key !== 'name' && key.substr(0, 1) !== '_';
+        });
+        if (keys) {
+          html = html + '<table><tbody>' + keys.map(function (key) {
+            return '<tr><td>' + key + '</td><td>' + properties[key] + '</td></tr>';
+          }) + '</tbody></table>';
+        }
+        return html;
+      }).addTo(map);
+      L.control.layers(
+        { '標準地図': std, '淡色地図': pale, '写真': ort, 'OSM': osm },
+        { 'GPSデータ': track }
+      ).addTo(map);
+    } else {
+      alert('Error!');
+    }
+  });
+  xhr.open('GET', param.url);
+  xhr.send();
+
   L.control.scale({ imperial: false, metric: true }).addTo(map);
 });
 </script>

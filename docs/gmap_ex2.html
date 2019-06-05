@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Googleマップ版ルート地図</title>
+<style>
+body {
+  margin: 0;
+}
+#map {
+  width: 640px;
+  height: 480px;
+}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxcuxvdd1SeIgtubznQ_JC7e08BZrIHkk&language=ja&region=JP"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  var param = {
+    div: 'map',
+    lng: 138.723460, lat: 35.931374, zoom: 13,
+    url: 'example/routemap.geojson'
+  };
+  var map = new google.maps.Map(document.getElementById(param.div), {
+    zoom: param.zoom,
+    center: {lat: param.lat, lng: param.lng},
+    mapTypeId: google.maps.MapTypeId.TERRAIN,
+    scaleControl: true
+  });
+  map.data.loadGeoJson(param.url);
+  map.data.setStyle(function (feature) {
+    var type = feature.getProperty('type');
+    if (type === 'polyline') {
+      console.log('polyline');
+      console.log(feature.properties);
+      return {
+/*
+        strokeColor: feature.getProperty('_color'),
+        strokeOpacity: feature.getProperty('_opacity'),
+        strokeWeight: feature.getProperty('_weight'),
+        clickable: false,
+        zIndex: 1
+*/
+      };
+    }
+    if (type === 'point') {
+      console.log('point');
+      console.log(feature.properties);
+      return {
+/*
+        icon: {
+          url: feature.getProperty('_iconUrl'),
+          anchor: new google.maps.Point(12, 12),
+        },
+        title: feature.getProperty('name');
+*/
+      };
+    }
+  });
+  var popup = new google.maps.InfoWindow();
+  map.data.addListener('click', function (event) {
+
+  });
+});
+</script>
+</body>
+</html>
