@@ -42,11 +42,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     if (type === 'Point') {
       return ({
-        icon: new google.maps.Icon({
-          url: feature.getProperty('_iconUrl'),
-          anchor: feature.getProperty('_iconAnchor'),
-          scaledSize: feature.getProperty('_iconSize')
-        }),
+        icon: feature.getProperty('_iconUrl'),
         title: feature.getProperty('name')
       });
     }
