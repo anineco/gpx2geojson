@@ -34,17 +34,15 @@ window.addEventListener('DOMContentLoaded', function() {
   map.data.setStyle(function (feature) {
     var type = feature.getGeometry().getType();
     if (type === 'LineString') {
-      var color = feature.getProperty('_color');
-      console.log(color);
       return ({
         strokeColor: feature.getProperty('_color'),
         strokeOpacity: feature.getProperty('_opacity'),
-        strokeWeight: feature.getProperty('_weight'),
-        clickable: false,
-        zIndex: 1
+        strokeWeight: feature.getProperty('_weight')
       });
     }
     if (type === 'Point') {
+      var name = feature.getProperty('name');
+      console.log(name);
       return ({
         icon: {
           url: feature.getProperty('_iconUrl'),
