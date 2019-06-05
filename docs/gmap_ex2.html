@@ -32,32 +32,25 @@ window.addEventListener('DOMContentLoaded', function() {
   });
   map.data.loadGeoJson(param.url);
   map.data.setStyle(function (feature) {
-    var type = feature.getProperty('type');
+    var type = feature.getGeometry().getType();
     console.log(type);
-    if (type === 'polyline') {
-      console.log('polyline');
-      console.log(feature.properties);
+    if (type === 'LineString') {
       return {
-/*
         strokeColor: feature.getProperty('_color'),
         strokeOpacity: feature.getProperty('_opacity'),
         strokeWeight: feature.getProperty('_weight'),
         clickable: false,
         zIndex: 1
-*/
       };
     }
-    if (type === 'point') {
-      console.log('point');
-      console.log(feature.properties);
+    if (type === 'Point') {
       return {
-/*
         icon: {
           url: feature.getProperty('_iconUrl'),
-          anchor: new google.maps.Point(12, 12),
+          anchor: feature.getProperty('_iconAnchor'),
+          scaledSize: feature.getProperty('_iconSize')
         },
         title: feature.getProperty('name');
-*/
       };
     }
   });
