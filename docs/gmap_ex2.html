@@ -33,26 +33,27 @@ window.addEventListener('DOMContentLoaded', function() {
   map.data.loadGeoJson(param.url);
   map.data.setStyle(function (feature) {
     var type = feature.getGeometry().getType();
+    console.log(feature);
     console.log(feature.getGeometry());
     console.log(type);
     if (type === 'LineString') {
-      return {
+      return ({
         strokeColor: feature.getProperty('_color'),
         strokeOpacity: feature.getProperty('_opacity'),
         strokeWeight: feature.getProperty('_weight'),
         clickable: false,
         zIndex: 1
-      };
+      });
     }
     if (type === 'Point') {
-      return {
+      return ({
         icon: {
           url: feature.getProperty('_iconUrl'),
           anchor: feature.getProperty('_iconAnchor'),
           scaledSize: feature.getProperty('_iconSize')
         },
         title: feature.getProperty('name')
-      };
+      });
     }
   });
   var popup = new google.maps.InfoWindow();
