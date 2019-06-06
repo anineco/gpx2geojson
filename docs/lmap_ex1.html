@@ -40,11 +40,11 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.0.3/layer/vector/KML.min.js"
   integrity="sha256-rdhg2NTrgTzWKSR56WTaeowiaLCWQ3vuJTYBuA9dc7I=" crossorigin="anonymous"></script>
 <script>
+var param = {
+  lon: 138.723460, lat: 35.931374, zoom: 13,
+  url: 'example/routemap.min.kml'
+};
 window.addEventListener('DOMContentLoaded', function() {
-  var param = {
-    lon: 138.723460, lat: 35.931374, zoom: 13,
-    url: 'example/routemap.kml'
-  };
   var map = L.map('map', {
     center: [param.lat, param.lon],
     zoom: param.zoom

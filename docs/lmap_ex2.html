@@ -44,13 +44,12 @@ body {
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>
 <script>
+var param = {
+  lon: 138.723460, lat: 35.931374, zoom: 13,
+  url: 'example/routemap.geojson'
+};
 window.addEventListener('DOMContentLoaded', function() {
-  var param = {
-    div: 'map',
-    lon: 138.723460, lat: 35.931374, zoom: 13,
-    url: 'example/routemap.geojson'
-  };
-  var map = L.map(param.div, {
+  var map = L.map('map', {
     center: [param.lat, param.lon],
     zoom: param.zoom
   });
@@ -70,49 +69,48 @@ window.addEventListener('DOMContentLoaded', function() {
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'json';
   xhr.addEventListener('loadend', function (e) {
-    if (this.status === 200) {
-      var track = L.geoJSON(this.response, {
-        pointToLayer: function (feature, latlng) {
-          return L.marker(latlng, {
-            icon: L.icon({
-              iconUrl: feature.properties._iconUrl,
-              iconSize: feature.properties._iconSize,
-              iconAnchor: feature.properties._iconAnchor
-            })
-          }).bindTooltip(feature.properties.name, {
-            permanent: true,
-            direction: 'left',
-            offset: L.point(-15,0),
-            opacity: 0.8
-          });
-        },
-        style: function (feature) {
-          return {
-            color: feature.properties._color,
-            weight: feature.properties._weight,
-            dashArray: feature.properties._dashArray
-          };
-        }
-      }).bindPopup(function (layer) {
-        var properties = layer.feature.properties;
-        var html = '<h2>' + properties.name + '</h2>';
-        var keys = Object.keys(properties).filter(function (key) {
-          return key !== 'geometry' && key !== 'name' && key.substr(0, 1) !== '_';
-        });
-        if (keys.length > 0) {
-          html = html + '<table><tbody>' + keys.map(function (key) {
-            return '<tr><td>' + key + '</td><td>' + properties[key] + '</td></tr>';
-          }) + '</tbody></table>';
-        }
-        return html;
-      }).addTo(map);
-      L.control.layers(
-        { '標準地図': std, '淡色地図': pale, '写真': ort, 'OSM': osm },
-        { 'GPSデータ': track }
-      ).addTo(map);
-    } else {
-      alert('Error!');
+    if (this.status !== 200) {
+      return;
     }
+    var track = L.geoJSON(this.response, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: feature.properties._iconUrl,
+            iconSize: feature.properties._iconSize,
+            iconAnchor: feature.properties._iconAnchor
+          })
+        }).bindTooltip(feature.properties.name, {
+          permanent: true,
+          direction: 'left',
+          offset: L.point(-15,0),
+          opacity: 0.8
+        });
+      },
+      style: function (feature) {
+        return {
+          color: feature.properties._color,
+          weight: feature.properties._weight,
+          dashArray: feature.properties._dashArray
+        };
+      }
+    }).bindPopup(function (layer) {
+      var properties = layer.feature.properties;
+      var html = '<h2>' + properties.name + '</h2>';
+      var keys = Object.keys(properties).filter(function (key) {
+        return key !== 'geometry' && key !== 'name' && key.substr(0, 1) !== '_';
+      });
+      if (keys.length > 0) {
+        html = html + '<table><tbody>' + keys.map(function (key) {
+          return '<tr><td>' + key + '</td><td>' + properties[key] + '</td></tr>';
+        }) + '</tbody></table>';
+      }
+      return html;
+    }).addTo(map);
+    L.control.layers(
+      { '標準地図': std, '淡色地図': pale, '写真': ort, 'OSM': osm },
+      { 'GPSデータ': track }
+    ).addTo(map);
   });
   xhr.open('GET', param.url);
   xhr.send();
