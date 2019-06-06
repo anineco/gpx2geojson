@@ -234,7 +234,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var keys = feature.getKeys().filter(function (key) {
       return key !== 'geometry' && key !== 'name' && key.substr(0, 1) !== '_';
     });
-    if (keys) {
+    if (keys.length > 0) {
       html = html + '<table><tbody>'
         + keys.map(function (key) { return '<tr><td>' + key + '</td><td>' + feature.get(key) + '</td></tr>'; })
         + '</tbody></table>';
