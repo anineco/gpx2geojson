@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bingマップ版ルート地図</title>
+<style>
+body {
+  margin: 0;
+}
+#map {
+  width: 640px;
+  height: 480px;
+}
+</style>
+<script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh" async defer></script>
+<script>
+var param = {
+  lon: 138.723460, lat: 35.931374, zoom: 13,
+  url: 'example/routemap.geojson'
+};
+function GetMap() {
+  var map = new Microsoft.Maps.Map('#map', {
+    center: new Microsoft.Maps.Location(param.lat, param.lon),
+    zoom: param.zoom
+  });
+
+  var track = new Microsoft.Maps.Layer();
+  map.layers.insert(track);
+  Microsoft.Maps.loadModule('Microsoft.Maps.GeoJson', function () {
+    Microsoft.Maps.GeoJson.readFromUrl(param.url, function (shapes) {
+      shapes.forEach(function (shape) {
+        if (shape instanceof Microsoft.Maps.Pushpin) {
+          var a = shape.metadata._iconAnchor;
+          shape.setOptions({
+            icon: shape.metadata._iconUrl,
+            anchor: new Microsoft.Maps.Point(a[0], a[1]),
+            title: shape.metadata.name
+          });
+        } else if (shape instanceof Microsoft.Maps.Polyline) {
+          var c = shape.metadata._color.match(/^#(..)(..)(..)$/).slice(1).map(function(h) {
+            return parseInt(h, 16);
+          });
+          c[3] = Math.round(255 * shape.metadata._opacity);
+          shape.setOptions({
+            strokeThickness: shape.metadata._weight,
+            strokeColor: new Microsoft.Maps.Color(c[3], c[0], c[1], c[2]),
+            strokeDashArray: shape.metadata._dashArray.split(',').map(function (v) {
+              return v / shape.metadata._weight;
+            })
+          });
+        }
+      });
+      track.add(shapes);
+    });
+  });
+
+  var popup = new Microsoft.Maps.Infobox(map.getCenter(), {
+    visible: false
+  });
+  popup.setMap(map);
+  Microsoft.Maps.Events.addHandler(track, 'click', function (event) {
+    var shape = event.target;
+    if (shape instanceof Microsoft.Maps.Pushpin) {
+      var keys = Object.keys(shape.metadata).filter(function (key) {
+        return key !== 'name' && key.substr(0, 1) !== '_';
+      });
+      var html = undefined;
+      if (keys.length > 0) {
+        html = '<table><tbody>' + keys.map(function (key) {
+          return '<tr><td>' + key + '</td><td>' + shape.metadata[key] + '</td></tr>';
+        }) + '</tbody></table>';
+      }
+      popup._options.description = undefined; // a hack to initialize 'description'
+      popup.setOptions({
+        location: shape.getLocation(),
+        title: shape.metadata.name,
+        description: html,
+        visible: true
+      });
+    }
+  });
+}
+</script>
+</head>
+<body>
+<div id="map"></div>
+</body>
+</html>
