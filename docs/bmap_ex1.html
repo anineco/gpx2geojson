@@ -13,7 +13,7 @@ body {
   height: 480px;
 }
 </style>
-<script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap" async defer></script>
+<script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh" async defer></script>
 <script>
 var param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
@@ -21,13 +21,12 @@ var param = {
 };
 function GetMap() {
   var map = new Microsoft.Maps.Map('#map', {
-    credentials: 'ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh',
     center: new Microsoft.Maps.Location(param.lat, param.lon),
     zoom: param.zoom
   });
   Microsoft.Maps.loadModule('Microsoft.Maps.GeoXml', function () {
-    layer = new Microsoft.Maps.GeoXmlLayer(param.url, null, { autoUpdateMapView: false });
-    map.layers.insert(layer);
+    track = new Microsoft.Maps.GeoXmlLayer(param.url, null, { autoUpdateMapView: false });
+    map.layers.insert(track);
   });
 }
 </script>

@@ -93,7 +93,6 @@ body {
 <script>
 window.addEventListener('DOMContentLoaded', function() {
   var param = {
-    div: 'map',
     lon: 138.723460, lat: 35.931374, zoom: 13,
     url: 'example/routemap.kml'
   };
@@ -153,7 +152,7 @@ window.addEventListener('DOMContentLoaded', function() {
     zoom: param.zoom
   });
   var map = new ol.Map({
-    target: param.div,
+    target: 'map',
     view: view,
     layers: [
       new ol.layer.Group({

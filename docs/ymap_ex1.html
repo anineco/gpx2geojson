@@ -20,15 +20,15 @@ body {
 <script>
 window.addEventListener('DOMContentLoaded', function() {
   var param = {
-    div: 'map',
     lng: 138.723460, lat: 35.931374, zoom: 14,
     url: 'https://anineco.github.io/gpx2geojson/example/routemap.kml'
   };
-  var map = new Y.Map(param.div);
+  var map = new Y.Map('map');
+  map.setConfigure('scrollWheelZoom', true);
+  map.setConfigure('enableOpenStreetMap', true);
   map.removeLayerSet(Y.LayerSetId.B1); // 地下街
   var topographicLayerSet = new Y.LayerSet('地形図', [new Y.StyleMapLayer('topographic')]);
   map.addLayerSet('MyTopographicLayerSet', topographicLayerSet);
-  map.setConfigure('scrollWheelZoom', true);
   map.addControl(new Y.LayerSetControl());
   map.addControl(new Y.ZoomControl());
 //  map.addControl(new Y.SliderZoomControlVertical());

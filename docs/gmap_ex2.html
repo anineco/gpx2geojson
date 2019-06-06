@@ -35,11 +35,10 @@ body {
 <script>
 window.addEventListener('DOMContentLoaded', function() {
   var param = {
-    div: 'map',
     lng: 138.723460, lat: 35.931374, zoom: 13,
     url: 'example/routemap.geojson'
   };
-  var map = new google.maps.Map(document.getElementById(param.div), {
+  var map = new google.maps.Map(document.getElementById('map'), {
     zoom: param.zoom,
     center: {lat: param.lat, lng: param.lng},
     mapTypeId: google.maps.MapTypeId.TERRAIN,
