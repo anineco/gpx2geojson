@@ -9,16 +9,22 @@ body {
   margin: 0;
 }
 #map {
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
 </style>
 <script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh" async defer></script>
 <script>
 var param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
-  url: 'example/routemap.min.kml'
+  url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml'
 };
+var ma = location.search.substr(1).split('&').forEach(function(ma) {
+  var s = ma.split('=');
+  param[s[0]] = decodeURIComponent(s[1]);
+});
 function GetMap() {
   var map = new Microsoft.Maps.Map('#map', {
     center: new Microsoft.Maps.Location(param.lat, param.lon),

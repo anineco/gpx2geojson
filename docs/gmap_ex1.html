@@ -9,8 +9,10 @@ body {
   margin: 0;
 }
 #map {
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
 </style>
 </head>
@@ -19,13 +21,17 @@ body {
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxcuxvdd1SeIgtubznQ_JC7e08BZrIHkk&language=ja&region=JP"></script>
 <script>
 var param = {
-  lng: 138.723460, lat: 35.931374, zoom: 13,
+  lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml'
 };
+var ma = location.search.substr(1).split('&').forEach(function(ma) {
+  var s = ma.split('=');
+  param[s[0]] = decodeURIComponent(s[1]);
+});
 window.addEventListener('DOMContentLoaded', function() {
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: param.zoom,
-    center: {lat: param.lat, lng: param.lng},
+    center: {lat: param.lat, lng: param.lon},
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     scaleControl: true
   });

@@ -9,8 +9,10 @@ body {
   margin: 0;
 }
 #map {
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
 </style>
 </head>
@@ -19,9 +21,13 @@ body {
 <script src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPWR0cjBWa012YVBQNiZzPWNvbnN1bWVyc2VjcmV0Jng9ZDU-"></script>
 <script>
 var param = {
-  lng: 138.723460, lat: 35.931374, zoom: 14,
+  lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml'
 };
+var ma = location.search.substr(1).split('&').forEach(function(ma) {
+  var s = ma.split('=');
+  param[s[0]] = decodeURIComponent(s[1]);
+});
 window.addEventListener('DOMContentLoaded', function() {
   var map = new Y.Map('map');
   map.setConfigure('scrollWheelZoom', true);
@@ -33,7 +39,7 @@ window.addEventListener('DOMContentLoaded', function() {
   map.addControl(new Y.ZoomControl());
 //  map.addControl(new Y.SliderZoomControlVertical());
   map.addControl(new Y.ScaleControl());
-  map.drawMap(new Y.LatLng(param.lat, param.lng), param.zoom, 'MyTopographicLayerSet');
+  map.drawMap(new Y.LatLng(param.lat, param.lon), param.zoom, 'MyTopographicLayerSet');
   var layer = new Y.GeoXmlLayer(param.url);
   map.addLayer(layer);
   layer.execute();
