@@ -73,12 +73,12 @@ window.addEventListener('DOMContentLoaded', function() {
   });
 
   var xhr = new XMLHttpRequest();
-  xhr.responseType = 'json';
+//  xhr.responseType = 'json';
   xhr.addEventListener('loadend', function (e) {
     if (this.status !== 200) {
       return;
     }
-    var track = L.geoJSON(this.response, {
+    var track = L.geoJSON(JSON.parse(this.responseText), {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
