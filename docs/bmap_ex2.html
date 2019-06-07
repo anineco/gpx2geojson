@@ -28,7 +28,7 @@ var ma = location.search.substr(1).split('&').forEach(function(ma) {
 function GetMap() {
   var map = new Microsoft.Maps.Map('#map', {
     center: new Microsoft.Maps.Location(param.lat, param.lon),
-    zoom: param.zoom
+    zoom: Number(param.zoom)
   });
 
   var track = new Microsoft.Maps.Layer();

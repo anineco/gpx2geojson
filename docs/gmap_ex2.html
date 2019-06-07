@@ -45,8 +45,8 @@ var ma = location.search.substr(1).split('&').forEach(function(ma) {
 });
 window.addEventListener('DOMContentLoaded', function() {
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: param.zoom,
-    center: {lat: param.lat, lng: param.lon},
+    zoom: Number(param.zoom),
+    center: {lat: Number(param.lat), lng: Number(param.lon)},
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     scaleControl: true
   });

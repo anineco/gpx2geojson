@@ -25,10 +25,11 @@ var ma = location.search.substr(1).split('&').forEach(function(ma) {
   var s = ma.split('=');
   param[s[0]] = decodeURIComponent(s[1]);
 });
+console.log(param);
 function GetMap() {
   var map = new Microsoft.Maps.Map('#map', {
     center: new Microsoft.Maps.Location(param.lat, param.lon),
-    zoom: param.zoom
+    zoom: Number(param.zoom)
   });
   Microsoft.Maps.loadModule('Microsoft.Maps.GeoXml', function () {
     track = new Microsoft.Maps.GeoXmlLayer(param.url, null, { autoUpdateMapView: false });
