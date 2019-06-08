@@ -11,8 +11,7 @@ use utf8;
 use open ':utf8';
 use open ':std';
 use XML::Simple;
-use FileHandle;
-use IPC::Open2;
+use File::Temp qw/ :POSIX /;
 use JSON;
 # include iconlut.pm
 #use FindBin qw($Bin);
@@ -45,6 +44,9 @@ foreach my $arg (@ARGV) {
 
 sub pointFeature {
   my $p = $_[0];
+# print STDERR "$p->{name}: ";
+# print STDERR utf8::is_utf8($p->{name}) ? "on" : "off";
+# print STDERR "\n";
   my $q = {
     type => 'Feature',
     properties => {
@@ -113,7 +115,10 @@ sub lineStringFeature {
     return $q;
   }
 # decimate track points in a segment by using gpsbabel. maximum allowable error = 0.005km.
-  open2(*IN, *OUT, "gpsbabel -t -i gpx -f - -x simplify,error=0.005k -o gpx -F -");
+  my $tmp1 = tmpnam();
+  my $tmp2 = tmpnam();
+
+  open(OUT, '>', $tmp1);
   print OUT "<gpx><trk><trkseg>\n";
   foreach my $trkpt (@{$p->{trkpt}}) {
     print OUT qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"/>\n!;
@@ -121,6 +126,9 @@ sub lineStringFeature {
   print OUT "</trkseg></trk></gpx>\n";
   close(OUT);
 
+  system("gpsbabel -t -i gpx -f $tmp1 -x simplify,error=0.005k -o gpx -F $tmp2");
+
+  open(IN, '<', $tmp2);
   my $i = 0;
   while (<IN>) {
     next if (!/<trkpt/);
@@ -128,6 +136,7 @@ sub lineStringFeature {
     @{$q->{geometry}->{coordinates}[$i++]} = (0+sprintf("%.6f",$2), 0+sprintf("%.6f",$1));
   }
   close(IN);
+  unlink $tmp1, $tmp2;
   return $q;
 }
 
