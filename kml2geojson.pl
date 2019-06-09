@@ -12,6 +12,7 @@ use open ':utf8';
 use open ':std';
 use XML::Simple;
 use JSON;
+# use Data::Dumper;
 
 if (@ARGV == 0) {
   die "Usage: kml2geojson.pl kmlfiles\n";
@@ -28,13 +29,9 @@ sub dehtml {
 
 sub pointFeature {
   my ($p, $id, $style) = @_;
-#
 # my $icon = substr($id, 1); # delete the first character 'N'
 # my $href = "https://map.jpn.org/icon/$icon.png";
-#
   my $href = $style->{IconStyle}->{Icon}->{href};
-  $href =~ s%^https://anineco\.org/%%;
-#
   my ($lon,$lat,$alt) = split /,/, $p->{Point}->{coordinates};
   my $q = {
     type => 'Feature',
@@ -62,15 +59,18 @@ sub pointFeature {
 
 sub lineStringFeature {
   my ($p, $id, $style) = @_;
-  my $c = $style->{LineStyle}->{color};
+  $style->{LineStyle}->{color} =~ /^(..)(..)(..)(..)$/;
+  my $color = "#$4$3$2";
+  my $opacity = hex($1) / 255.0;
   my $q = {
     type => 'Feature',
     properties => {
-      _color => '#' . substr($c,6,2) . substr($c,4,2) . substr($c,2,2),
+      _color => $color,
+#     _opacity => $opacity,
+      _opacity => 0.5,
 #     _weight => $style->{LineStyle}->{width},
       _weight => 3,
       _dashArray => "3,6",
-      _opacity => 0.5
     },
     geometry => {
       type => 'LineString',
@@ -91,33 +91,35 @@ my $parser = XML::Simple->new(
 );
 my $json = JSON->new();
 
-foreach my $arg (@ARGV) {
-  my $xml = $parser->XMLin($arg);
+sub kml2geojson {
+  my $kml = $_[0];
   my $q = {
     type => 'FeatureCollection',
     features => []
   };
   my $n = 0;
-  foreach my $folder (@{$xml->{Document}->{Folder}}) {
+  foreach my $folder (@{$kml->{Document}->{Folder}}) {
     foreach my $p (@{$folder->{Placemark}}) {
       my $id = substr($p->{styleUrl}, 1); # delete the first character '#'
-      my $style = $xml->{Document}->{Style}->{$id};
+      my $style = $kml->{Document}->{Style}->{$id};
       if ($p->{Point}) {
         $q->{features}[$n++] = pointFeature($p, $id, $style);
       } elsif ($p->{LineString}) {
         $q->{features}[$n++] = lineStringFeature($p, $id, $style);
-      } else {
-        die "'Point' and 'LineString' only are supported.\n";
       }
     }
   }
+  return $q;
+}
 
-# print $json->pretty->encode($q), "\n";
+foreach my $arg (@ARGV) {
+  my $kml = $parser->XMLin($arg);
+  my $geojson = kml2geojson($kml);
   my $out = $arg;
   $out =~ s/\.kml$/.geojson/;
   print STDERR "$arg -> $out\n";
-  open(OUT, ">$out") or die "$!";
-  print OUT $json->utf8(0)->encode($q), "\n";
+  open(OUT, ">$out");
+  print OUT $json->utf8(0)->encode($geojson), "\n";
   close(OUT);
 }
 
