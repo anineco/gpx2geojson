@@ -22,13 +22,17 @@ use File::HomeDir;
 use File::Basename qw(dirname);
 use File::Temp qw(:POSIX);
 use Tk;
-use Data::Dumper;
+#use Data::Dumper;
 # include iconlut.pm
 use FindBin qw($Bin);
 use lib "$Bin";
 use iconlut;
 
 my $version = '0.1';
+
+if ($^O eq 'MSWin32') {
+  $ENV{PATH} += 'C:\Program Files (x86)\GPSBabel';
+}
 
 my %param = (
   line_style => 13,
@@ -43,23 +47,23 @@ my %param = (
 my $home = File::HomeDir->my_home;
 
 sub openParam {
-  open(IN, "<$home/.gpx2geojson") || return;
-  while (<IN>) {
+  open(my $in, "<$home/.gpx2geojson") || return;
+  while (<$in>) {
     chomp;
     my ($k, $v) = split('=');
     if (exists($param{$k})) {
       $param{$k} = $v;
     }
   }
-  close(IN);
+  close($in);
 }
 
 sub saveParam {
-  open(OUT, ">$home/.gpx2geojson") || return;
+  open(my $out, ">$home/.gpx2geojson") || return;
   foreach (keys(%param)) {
-    print OUT "$_=$param{$_}\n";
+    print $out "$_=$param{$_}\n";
   }
-  close(OUT);
+  close($out);
 }
 
 my $outfile = '';
@@ -168,23 +172,25 @@ sub lineStringFeature {
 # decimate track points in a segment using gpsbabel
   my $tmp1 = tmpnam();
   my $tmp2 = tmpnam();
-  open(OUT, ">$tmp1");
-  print OUT "<gpx><trk><trkseg>\n";
+  open(my $out, ">$tmp1");
+  print $out "<gpx><trk><trkseg>\n";
   foreach my $trkpt (@{$p->{trkpt}}) {
-    print OUT qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"/>\n!;
+    print $out qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"></trkpt>\n!;
   }
-  print OUT "</trkseg></trk></gpx>\n";
-  close(OUT);
+  print $out "</trkseg></trk></gpx>\n";
+  close($out);
 
-  system("gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2");
+  system(
+    "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2"
+  ) == 0 or die "Can't execute gpsbabel: $!";
 
-  open(IN, "<$tmp2");
-  while (<IN>) {
+  open(my $in, "<$tmp2");
+  while (<$in>) {
     next if (!/<trkpt/);
     m%<trkpt lat="(.*)" lon="(.*)"/>%;
     @{$q->{geometry}->{coordinates}[$i++]} = (0+sprintf("%.6f",$2), 0+sprintf("%.6f",$1));
   }
-  close(IN);
+  close($in);
   $n_point += $i;
   unlink $tmp1, $tmp2;
   return $q;
@@ -220,7 +226,7 @@ sub gpx2geojson {
   return $q;
 }
 
-# CUI
+# CLI
 
 openParam();
 
@@ -362,9 +368,9 @@ $top->Button(-text => '変換', -command => sub {
   }
   my $gpx = readGpxFiles($gpxfiles->get(0, 'end'));
   my $geojson = gpx2geojson($gpx);
-  open(OUT, ">$outfile");
-  print OUT JSON->new->utf8(0)->encode($geojson), "\n";
-  close(OUT);
+  open(my $out, ">$outfile");
+  print $out JSON->new->utf8(0)->encode($geojson), "\n";
+  close($out);
   $top->messageBox(-type => 'ok', -title => '成功',
     -message => "変換結果を${outfile}に出力しました"
   );

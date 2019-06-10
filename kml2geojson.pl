@@ -61,15 +61,16 @@ sub lineStringFeature {
   my ($p, $id, $style) = @_;
   $style->{LineStyle}->{color} =~ /^(..)(..)(..)(..)$/;
   my $color = "#$4$3$2";
-  my $opacity = hex($1) / 255.0;
+# my $opacity = hex($1) / 255.0;
+  my $opacity = 0.5;
+# my $w = 0 + $style->{LineStyle}->{width};
+  my $w = 3;
   my $q = {
     type => 'Feature',
     properties => {
       _color => $color,
-#     _opacity => $opacity,
-      _opacity => 0.5,
-#     _weight => $style->{LineStyle}->{width},
-      _weight => 3,
+      _opacity => $opacity,
+      _weight => $w,
       _dashArray => "3,6",
     },
     geometry => {
@@ -118,9 +119,9 @@ foreach my $arg (@ARGV) {
   my $out = $arg;
   $out =~ s/\.kml$/.geojson/;
   print STDERR "$arg -> $out\n";
-  open(OUT, ">$out");
-  print OUT $json->utf8(0)->encode($geojson), "\n";
-  close(OUT);
+  open(my $fh, ">$out");
+  print $fh $json->utf8(0)->encode($geojson), "\n";
+  close($fh);
 }
 
 # end of kml2geojson.pl

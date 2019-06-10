@@ -4,11 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Web地図を利用したGPSログ表示</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+iframe {
+  width: 640px;
+  height: 480px;
+  border: none;
+}
+td {
+  text-align: center;
+}
+</style>
 </head>
 <body>
-<ol>
-<li><a href="list1.html">KML</a></li>
-<li><a href="list2.html">GeoJSON</a></li>
-</ol>
+<div class="menu">
+<ul>
+<li><a href="http://anineco.nyanta.jp/">電脳覚書</a> &gt;</li>
+<li>TOP &gt;</li>
+<li><a href="gpx2geojson.html">GPX2GEOJSON</a> |</li>
+<li><a href="omap.html">OpenLayers</a> |</li>
+<li><a href="lmap.html">Leaflet</a>|</li>
+<li><a href="gmap.html">Googleマップ</a> |</li>
+<li><a href="ymap.html">Yahoo!地図</a>|</li>
+<li><a href="bmap.html">Bing Maps</a>|</li>
+<li><a href="transition.html">KMLからの移行</a></li>
+</ul>
+</div><!-- end menu -->
+<h1>Web地図を利用したGPSログ表示</h1>
+<ul>
+<li>更新情報（2019-06-09）
+<img src="image/new.gif" alt="NEW" height="11" width="20"><br>
+以下の項目を変更し、サイトを全面的に改訂しました。
+<ul>
+<li>上乗せするGPSデータの形式をKMLから<strong>GeoJSON</strong>に変更。</li>
+<li>GeoJSONへの変換ユーティリティ<strong>GPX2GEOJSON（GPX→GeoJSONコンバータ）</strong>、KML2GEOJSON（KML→GeoJSONコンバータ）を公開。</li>
+<li>新たに<strong>Leaflet</strong>、<strong>Bing Maps</strong>を利用したルート地図の作例を掲載。</li>
+<li>Yahoo!地図はGeoJSONの上乗せ表示が難しいので、KMLを上乗せ表示した作例のみを掲載。</li>
+<li>本サイトおよびルート地図の作例のHTMLを、XHTML1.0から<strong>HTML5</strong>に変更。</li>
+</ul>
+</li>
+<li>旧サイトは<a href="https://anineco.github.io/gpx2jsgi/">https://anineco.github.io/gpx2jsgi/</a>からアクセス可能です。</li>
+<li>このサイトの内容に関するご意見・ご質問は、<a href="http://anineco.nyanta.jp/bbs/">サポート掲示板</a>へお願いします。</li>
+</ul>
+<h2>このサイトについて</h2>
+<p>このサイトでは、ハンディGPSで記録したログ（軌跡データ）を、<a href="https://maps.gsi.go.jp/" class="extern">地理院地図</a>の地形図に重ね合わせてホームページに表示する方法を紹介しています。GPSログを表示した地図のことを、本サイトでは「ルート地図」と呼んでいます。地理院地図を用いたルート地図の設置方法を主として扱っていますが、GoogleマップやYahoo!地図、Bing Mapsを用いたルート地図の設置方法も掲載しています。</p>
+<p>このサイトの内容は、GPSからのログの読み込みに<a href="http://www.kashmir3d.com/" class="extern">カシミール3D</a>を利用することを前提としています。カシミール3Dで作成したルート地図を、単に画像としてホームページに表示するのではなく、スクロールやズームイン・ズームアウト等の操作が可能なルート地図として表示します。</p>
+<p>このサイトでは、ルート地図を作成するためのユーティリティ<a href="gpx2geojson.html">GPX2GEOJSON</a>（GPX→GeoJSONコンバータ）もフリーソフトウェアとして配布しています。これは、作者のホームページ（<a href="https://anineco.org/" class="extern">あにねこ登山日誌</a>）の山行記録に添えるルート地図を、少ない手間で見栄えよく表示したいという目的で開発しているものです。</p>
+<p>このサイトの読者については、ハンディGPSとカシミール3Dの操作方法、および、ホームページ作成、HTML、JavaScriptについての基礎知識があることを想定しています。これらの知識については、必要に応じて他の情報源を参照して下さい。</p>
+<p>このサイトと、このサイトで設置方法を説明するルート地図は、以下のブラウザで閲覧した際に適切に表示されます。</p>
+<ul>
+<li>Windows：Internet Explorer 11、Edge、およびFirefox、Chrome、Operaの各最新版</li>
+<li>Mac：Safari、Firefox、Chrome、Operaの各最新版</li>
+<li>Linux：Firefox、Chrome、Operaの各最新版</li>
+</ul>
+<p>このサイトの管理人の使用機材は下記のとおりです。主にこの環境で動作確認を行っています。</p>
+<ul>
+<li>メインPC：Apple Mac mini (Late 2014)、macOS Mojave、Safari 12</li>
+<li>サブPC：Epson Endeavor TY5100S、Windows 10、Microsoft Edge、カシミール3D 最新版</li>
+<li>GPS：Garmin eTrex 20J</li>
+</ul>
+<h2>どんなルート地図ができるの？</h2>
+<p>図1に、様々な方式で設置したルート地図の表示例を示します。図1(a)は、カシミール3Dで作成したルート地図を画像ファイルとして出力し、HTMLのimg要素として表示したものです。トラックの往路を赤、復路を青に色付けし、ウェイポイントにアイコン画像を表示しています。</p>
+<p>図1(b)は、ルート地図を構成するGPSデータ（トラック、ウェイポイント）をカシミール3DでGPX形式のファイルとして保存し、<a href="gpx2jsgi.html">GPX2JSGI</a>でKML形式に変換して、地理院地図に重ね合わせたルート地図です。比較のため、表示領域の画素数は図1(a)の画像の画素数に合わせてあります。また、同じKMLファイルをGoogleマップとYahoo!地図にそれぞれ重ね合わせたものが、図1(c)と図1(d)のルート地図です。</p>
+<p>図1(b)〜(d)のルート地図では、マウス左ボタンを押しながら地図をドラッグすると、滑らかにスクロールさせることができます。また、(＋)、(−)ボタンをクリックしたり、マウスホイールを回転させると、地図のズームイン、ズームアウトができます。地図上のアイコンをクリックすると小窓がポップアップして、地名や簡単な説明が表示されます。種類の異なる地図や航空写真への切り替えも可能です。</p>
+<p>各項目にある<span class="routemap" style="color:blue;">ルート地図</span>ボタンをクリックすると、別ウィンドウを開いてルート地図を表示します。ウィンドウの大きさを変えると地図の表示範囲も追従して変化します。地図を見やすい大きさで表示することができ、大変便利です。</p>
+<p>図1(b)〜(d)のルート地図は、地図上にGPSログを表示するだけの最も基本的な機能を実装した例です。この他にも、本サイトが取り扱う範囲を超えますが、設定と工夫次第で見栄えを変えたり、様々な機能を追加することができます。</p>
+<table class="base">
+<caption>図1 ルート地図の表示例（ページ内表示）</caption>
+<tbody>
+<tr>
+<td><img src="example/Mt_Hayama.png" alt="*" width="430" height="240"></td>
+<td valign="top">(a) カシミール3D【解説本】2万5千地形図</td>
+</tr>
+<tr>
+<td><iframe src="omap_ex2.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.geojson"></iframe></td>
+<td valign="top">(b) OpenLayers版ルート地図（<a href="omap.html">解説</a>）</td>
+</tr>
+<tr>
+<td><iframe src="lmap_ex2.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.geojson"></iframe></td>
+<td valign="top">(c) Leaflet版ルート地図（<a href="lmap.html">解説</a>）</td>
+</tr>
+<tr>
+<td><iframe src="gmap_ex2.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.geojson"></iframe></td>
+<td valign="top">(d) Googleマップ版ルート地図（<a href="gmap.html">解説</a>）</td>
+</tr>
+<tr>
+<td><iframe src="bmap_ex2.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.geojson"></iframe></td>
+<td valign="top">(e) Bing Maps版ルート地図（<a href="bmap.html">解説</a>）</td>
+</tr>
+</tbody>
+</table>
+<h2>ルート地図の設置手順の概要</h2>
+<div style="float:right;margin:20px;text-align:center;"><img src="image/dataflow.gif" width="469" height="313" alt="*" style="margin:10px;"/><br>図2 ルート地図設置のためのデータ処理の概要</div>
+<p>図2は、地理院地図を用いたルート地図を設置するためのデータ処理の概要を示したものです。</p>
+<ul style="list-style-type:none;padding-left:0;">
+<li><strong>①</strong> GPSから軌跡データをカシミール3Dに読み込みます。</li>
+<li><strong>②</strong> カシミール3Dで軌跡データを編集し、ウェイポイント等を追加したのち、GPX形式で出力します。</li>
+<li><strong>③</strong> <a href="gpx2geojson.html">GPX2GEOJSON</a>を用いて、GPXデータを地理院地図で利用可能な上乗せデータ（GeoJSON形式）に変換します。</li>
+<li><strong>④</strong> 上乗せデータを、FTPソフト等を用いて、ユーザサイトにアップロードします。</li>
+<li><strong>⑤</strong> 地理院地図を呼び出すJavaScriptコードを記述したHTMLファイルを設置します。</li>
+</ul>
+<p>以上でルート地図が完成します。Webブラウザで⑤のHTMLファイルにアクセスすると、国土地理院の地図サーバから読み出した背景地図データに上乗せデータを重ね合わせたルート地図が表示されます。</p>
+<p>なお、GoogleマップやYahoo!地図を用いる場合も、JavaScriptコードの部分がそれぞれ異なりますが、データ処理の流れは基本的に同じです。</p>
+<h2>ルート地図の表示方式の比較</h2>
+<p>ルート地図の各表示方式をざっくり比較して表1に示します。</p>
+<table class="base">
+<caption>表1 ルート地図の表示方式の比較</caption>
+<tbody>
+<tr><th>比較項目</th><th>OpenLayers</th><th>Leaflet</th><th>Googleマップ</th><th>Bing Maps</th><th>Yahoo!地図</th></tr>
+<tr><td>地図のスクロール</td><td>○</td><td>○</td><td>○</td></tr>
+<tr><td>ズームイン／アウト</td><td>○</td><td>○</td><td>○</td></tr>
+<tr><td>表示領域のサイズ変更</td><td>○</td><td>○</td><td>○</td></tr>
+<tr><td>複数地図の切り替え</td><td>○</td><td>○</td><td>○</td></tr>
+<tr><td>航空写真への切り替え</td><td>○（※1）</td><td>○</td><td>○</td></tr>
+<tr><td>コード記述</td><td>△やや複雑（※2）</td><td>△やや複雑（※2）</td><td>△やや複雑（※2）</td></tr>
+<tr><td>上乗せデータ形式</td><td>KML</td><td>KML、KMZ</td><td>KML</td></tr>
+<tr><td>データ変換</td><td>△簡単（※3）</td><td>△簡単（※3）</td><td>△簡単（※3）</td></tr>
+<tr><td>利用許諾</td><td>必要（<a href="http://www.gsi.go.jp/LAW/2930-index.html" class="extern">国土地理院</a>）</td><td>不要</td><td>不要（※4）</td><td>不要（※4）</td></tr>
+<tr><td>特徴</td><td>単純で簡単</td><td>地形図が高精細</td><td>高機能でポピュラー</td><td>まだマイナー？</td></tr>
+</tbody>
+</table>
+<p>※1 山岳地帯の航空写真は未整備。<br>
+※2 複雑と言っても、HTMLファイルに定型的なJavaScriptコードを加えるだけです。<br>
+※3 <a href="gpx2geojson.html">GPX2GEOJSON</a>を使えば簡単。手間はインストールだけで、それも簡単だけです。<br>
+※4 APIキー、アプリケーションIDの取得（無料）が必要です。</p>
+<h2>リンク集</h2>
+<p style="float:right;text-align:center;"><a href="image/gpsweb.png"><img src="image/gpsweb.png" alt="地図系Web APIを利用したGPS軌跡表示" border="0" height="40" width="115"></a><br>
+（115x40）</p>
+<p>GPSと地理院地図の利用に関連する情報、活用事例へのリンクです（随時、追加中）。なお、当サイトへのリンクは御自由にどうぞ。リンクの際にもしバナーが必要でしたら、右のリンクバナーをご利用下さい。</p>
+<ul>
+<li><a href="http://portal.cyberjapan.jp/" class="extern">地理院地図（電子国土Web）</a><br>
+地理院地図についての詳細な情報は、ここの「技術情報」から入手できます。</li>
+<h2>更新履歴</h2>
+<table class="base">
+<tbody>
+<tr>
+<td valign="top">2019-06-09</td>
+<td valign="top">サイトを全面的に改訂。GPX2GEOJSONを公開。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div style="float:left;">
+<img src="http://anineco.nyanta.jp/count/dream.cgi?id=gpsweb&amp;fig=6&amp;gif=2" alt="*" height="21" width="84">
+<script type="text/javascript">//<![CDATA[
+document.write("<img src='http://anineco.nyanta.jp/report/report.cgi?" + escape(document.referrer) + "' width='1' height='1'>");
+//]]></script>
+</div>
+<address>Copyright &copy; 2019 <a href="http://anineco.nyanta.jp/">あにねこ電脳覚書</a></address>
 </body>
 </html>
