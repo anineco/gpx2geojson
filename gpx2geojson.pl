@@ -16,7 +16,7 @@ use warnings;
 use utf8;
 use open ':utf8';
 use open ':std';
-use XML::Simple;
+use XML::Simple qw(:strict);
 use JSON;
 use File::HomeDir;
 use File::Basename qw(dirname);
@@ -29,10 +29,6 @@ use lib "$Bin";
 use iconlut;
 
 my $version = '0.1';
-
-if ($^O eq 'MSWin32') {
-  $ENV{PATH} += 'C:\Program Files (x86)\GPSBabel';
-}
 
 my %param = (
   line_style => 13,
@@ -78,7 +74,7 @@ sub readGpxFiles {
   my $gpx = {wpt => [], rte => [], trk => []};
 # merge GPX files
   foreach my $file (@files) {
-    my $xml = $parser->XMLin($file);
+    my $xml = $parser->XMLin($file) or die "Can't parse $file: $!";
     foreach my $tag ('wpt', 'rte', 'trk') {
       my $i = $#{$gpx->{$tag}} + 1;
       my $j = 0;
@@ -144,6 +140,11 @@ sub getProperties {
   return $q;
 }
 
+my $gpsbabel = 'gpsbabel';
+if ($^O eq 'MSWin32') {
+  $gpsbabel = 'C:\Program Files (x86)\GPSBabel\gpsbabel.exe';
+}
+
 sub lineStringFeature {
   my ($p, $tag, $properties) = @_; # rte or trkseg
   my $q = {
@@ -154,16 +155,10 @@ sub lineStringFeature {
       coordinates => []
     }
   };
-  my $i = 0;
-  if ($tag eq 'rtept') {
-    foreach my $rtept (@{$p->{rtept}}) {
-      @{$q->{geometry}->{coordinates}[$i++]} = (0+$rtept->{lon}, 0+$rtept->{lat});
-    }
-    return $q;
-  }
-  if (!$param{xt_state}) {
-    foreach my $trkpt (@{$p->{trkpt}}) {
-      @{$q->{geometry}->{coordinates}[$i++]} = (0+$trkpt->{lon}, 0+$trkpt->{lat});
+  if ($tag eq 'rtept' || !$param{xt_state}) {
+    my $i = 0;
+    foreach (@{$p->{$tag}}) {
+      @{$q->{geometry}->{coordinates}[$i++]} = (0+$_->{lon}, 0+$_->{lat});
     }
     $n_point += $i;
     return $q;
@@ -179,9 +174,11 @@ sub lineStringFeature {
   print $out "</trkseg></trk></gpx>\n";
   close($out);
 
-  system(
-    "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2"
-  ) == 0 or die "Can't execute gpsbabel: $!";
+  system($gpsbabel, '-t',
+    '-i', 'gpx', '-f', $tmp1,
+    '-x', "simplify,error=$param{xt_error}k",
+    '-o', 'gpx', '-F', $tmp2
+  ) == 0 or die q{Can't execute gpsbabel};
 
   open(my $in, "<$tmp2");
   while (<$in>) {
@@ -357,13 +354,13 @@ $top->Entry(
 $top->Button(-text => '変換', -command => sub {
   if ($gpxfiles->size == 0) {
     $top->messageBox(-type => 'ok', -icon => 'warning', -title => '警告',
-      -message => "GPXファイルが未設定"
+      -message => 'GPXファイルが未設定'
     );
     return;
   }
   if ($outfile eq '') {
     $top->messageBox(-type => 'ok', -icon => 'warning', -title => '警告',
-      -message => "出力ファイルが未設定"
+      -message => '出力ファイルが未設定'
     );
     return;
   }
