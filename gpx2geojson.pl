@@ -47,7 +47,7 @@ my %param = (
 my $home = File::HomeDir->my_home;
 
 sub openParam {
-  open(my $in, "<$home/.gpx2geojson") || return;
+  open(my $in, "<$home/.gpx2geojson") or return;
   while (<$in>) {
     chomp;
     my ($k, $v) = split('=');
@@ -59,15 +59,14 @@ sub openParam {
 }
 
 sub saveParam {
-  open(my $out, ">$home/.gpx2geojson") || return;
+  open(my $out, ">$home/.gpx2geojson") or return;
   foreach (keys(%param)) {
     print $out "$_=$param{$_}\n";
   }
   close($out);
 }
 
-my $outfile = '';
-my $n_point = 0; # number of points in the result
+my $n_point = 0; # number of track points after conversion
 
 my $parser = XML::Simple->new(
   forcearray => ['trk','trkseg','trkpt','wte','rte','rtept'],
@@ -175,7 +174,7 @@ sub lineStringFeature {
   open(my $out, ">$tmp1");
   print $out "<gpx><trk><trkseg>\n";
   foreach my $trkpt (@{$p->{trkpt}}) {
-    print $out qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"></trkpt>\n!;
+    print $out qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"/>\n!;
   }
   print $out "</trkseg></trk></gpx>\n";
   close($out);
@@ -226,18 +225,18 @@ sub gpx2geojson {
   return $q;
 }
 
-# CLI
-
 openParam();
+
+# command line interface
 
 if (@ARGV > 0) {
   my $gpx = readGpxFiles(@ARGV);
-  my $json = gpx2geojson($gpx);
-  print JSON->new->pretty->encode($json);
+  my $geojson = gpx2geojson($gpx);
+  print JSON->new->pretty->encode($geojson);
   exit 0;
 }
 
-# GUI
+# graphical user interface
 
 my $top = MainWindow->new();
 $top->optionAdd('*font', ['MS Gothic', 10]);
@@ -263,9 +262,9 @@ $top->Button(-text => '←追加', -command => sub {
     -initialdir => $param{indir},
     -multiple => 'yes'
   );
-  foreach (@{$ret}) {
-    $gpxfiles->insert('end', $_);
-    $param{indir} = dirname($_);
+  foreach my $path (@{$ret}) {
+    $gpxfiles->insert('end', $path);
+    $param{indir} = dirname($path);
   }
 })->grid(-row => 1, -column => 4, -sticky => 'ew');
 
@@ -277,6 +276,8 @@ $top->Button(-text => '除外', -command => sub {
 $top->Button(-text => 'クリア', -command => sub {
   $gpxfiles->delete(0, 'end');
 })->grid(-row => 3, -column => 4, -sticky => 'ew');
+
+my $outfile = '';
 
 $top->Entry(
   -textvariable => \$outfile
@@ -360,7 +361,7 @@ $top->Button(-text => '変換', -command => sub {
     );
     return;
   }
-  if ($outfile eq "") {
+  if ($outfile eq '') {
     $top->messageBox(-type => 'ok', -icon => 'warning', -title => '警告',
       -message => "出力ファイルが未設定"
     );
@@ -368,11 +369,13 @@ $top->Button(-text => '変換', -command => sub {
   }
   my $gpx = readGpxFiles($gpxfiles->get(0, 'end'));
   my $geojson = gpx2geojson($gpx);
-  open(my $out, ">$outfile");
+  my $ret = open(my $out, ">$outfile");
   print $out JSON->new->utf8(0)->encode($geojson), "\n";
   close($out);
-  $top->messageBox(-type => 'ok', -title => '成功',
-    -message => "変換結果を${outfile}に出力しました"
+  $top->messageBox(-type => 'ok',
+    -title => $ret ? '成功' : '失敗',
+    -message => $ret ? "変換結果を${outfile}に出力しました"
+                     : "変換結果が${outfile}に出力できません"
   );
 })->grid(-row => 9, -column => 1);
 
@@ -381,6 +384,6 @@ $top->Button(-text => '終了', -command => sub {
   exit;
 })->grid(-row => 9, -column => 4);
 
-MainLoop;
+MainLoop();
 
 # end of gpx2geojson.pl

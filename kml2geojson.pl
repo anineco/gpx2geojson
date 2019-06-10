@@ -19,11 +19,11 @@ if (@ARGV == 0) {
 }
 
 sub dehtml {
-  my $s = $_[0];
-  $s =~ s|^<table><tr><td>||;
-  $s =~ s|</td></tr></table>$||;
-  $s =~ s|</td></tr><tr><td>|,|g;
-  $s =~ s|</td><td>|=|g;
+  my $s = $_[0]; # description
+  $s =~ s%^<table><tr><td>%%;
+  $s =~ s%</td></tr></table>$%%;
+  $s =~ s%</td></tr><tr><td>%,%g;
+  $s =~ s%</td><td>%=%g;
   return $s;
 }
 
@@ -86,12 +86,6 @@ sub lineStringFeature {
   return $q;
 }
 
-my $parser = XML::Simple->new(
-  forcearray => ['Style','Folder','Placemark'],
-  keyattr => ['id']
-);
-my $json = JSON->new();
-
 sub kml2geojson {
   my $kml = $_[0];
   my $q = {
@@ -113,15 +107,21 @@ sub kml2geojson {
   return $q;
 }
 
+my $parser = XML::Simple->new(
+  forcearray => ['Style','Folder','Placemark'],
+  keyattr => ['id']
+);
+my $serializer = JSON->new();
+
 foreach my $arg (@ARGV) {
   my $kml = $parser->XMLin($arg);
   my $geojson = kml2geojson($kml);
-  my $out = $arg;
-  $out =~ s/\.kml$/.geojson/;
-  print STDERR "$arg -> $out\n";
-  open(my $fh, ">$out");
-  print $fh $json->utf8(0)->encode($geojson), "\n";
-  close($fh);
+  my $outfile = $arg;
+  $outfile =~ s/\.kml$/.geojson/;
+  print STDERR "$arg -> $outfile\n";
+  open(my $out, ">$outfile") or die "Can't open $outfile: $!";
+  print $out $serializer->utf8(0)->encode($geojson), "\n";
+  close($out);
 }
 
 # end of kml2geojson.pl
