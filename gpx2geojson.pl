@@ -9,7 +9,7 @@
 
 # Copyright (c) 2019 anineco@nifty.com
 # Released under the MIT license
-# https://opensource.org/licenses/mit-license.php
+# https://github.com/anineco/gpx2geojson/blob/master/LICENSE
 
 use strict;
 use warnings;
@@ -18,17 +18,19 @@ use open ':utf8';
 use open ':std';
 use XML::Simple qw(:strict);
 use JSON;
-use File::HomeDir;
 use File::Basename qw(dirname);
 use File::Temp qw(:POSIX);
+use File::HomeDir;
 use Tk;
-#use Data::Dumper;
+if ($^O eq 'MSWin32') {
+  use Win32::Process;
+}
 # include iconlut.pm
 use FindBin qw($Bin);
 use lib "$Bin";
 use iconlut;
 
-my $version = '0.1';
+my $version = '0.9';
 
 my %param = (
   line_style => 13,
@@ -61,8 +63,6 @@ sub saveParam {
   }
   close($out);
 }
-
-my $n_point = 0; # number of track points after conversion
 
 my $parser = XML::Simple->new(
   forcearray => ['trk','trkseg','trkpt','wte','rte','rtept'],
@@ -140,10 +140,7 @@ sub getProperties {
   return $q;
 }
 
-my $gpsbabel = 'gpsbabel';
-if ($^O eq 'MSWin32') {
-  $gpsbabel = 'C:\Program Files (x86)\GPSBabel\gpsbabel.exe';
-}
+my $n_point; # number of track points after conversion
 
 sub lineStringFeature {
   my ($p, $tag, $properties) = @_; # rte or trkseg
@@ -155,8 +152,8 @@ sub lineStringFeature {
       coordinates => []
     }
   };
-  if ($tag eq 'rtept' || !$param{xt_state}) {
-    my $i = 0;
+  my $i = 0;
+  if ($tag eq 'rtept' or !$param{xt_state}) {
     foreach (@{$p->{$tag}}) {
       @{$q->{geometry}->{coordinates}[$i++]} = (0+$_->{lon}, 0+$_->{lat});
     }
@@ -174,11 +171,17 @@ sub lineStringFeature {
   print $out "</trkseg></trk></gpx>\n";
   close($out);
 
-  system($gpsbabel, '-t',
-    '-i', 'gpx', '-f', $tmp1,
-    '-x', "simplify,error=$param{xt_error}k",
-    '-o', 'gpx', '-F', $tmp2
-  ) == 0 or die q{Can't execute gpsbabel};
+  my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
+  if ($^O eq 'MSWin32') {
+    # call external program without opening unsightly console window
+    Win32::Process::Create(my $process,
+      'C:\Program Files (x86)\GPSBabel\gpsbabel.exe', # full path of executable file
+      $cmd, 0, CREATE_NO_WINDOW, '.'
+    );
+    $process->Wait(INFINITE);
+  } else {
+    system($cmd);
+  }
 
   open(my $in, "<$tmp2");
   while (<$in>) {
@@ -230,7 +233,7 @@ if (@ARGV > 0) {
   my $gpx = readGpxFiles(@ARGV);
   my $geojson = gpx2geojson($gpx);
   print JSON->new->pretty->encode($geojson);
-  exit 0;
+  exit;
 }
 
 # graphical user interface
@@ -378,9 +381,9 @@ $top->Button(-text => '変換', -command => sub {
 
 $top->Button(-text => '終了', -command => sub {
   saveParam();
-  exit;
+  $top->destroy();
 })->grid(-row => 9, -column => 4);
 
 MainLoop();
 
-# end of gpx2geojson.pl
+__END__
