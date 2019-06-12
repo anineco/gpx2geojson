@@ -240,7 +240,7 @@ if (@ARGV > 0) {
 
 my $top = MainWindow->new();
 $top->optionAdd('*font', ['MS Gothic', 10]);
-$top->title('GPX2GEOJSON');
+$top->title('GPX2GeoJSON');
 $top->resizable(0, 0);
 $top->Label(
   -text => "GPX→GeoJSONコンバータ Ver.$version"

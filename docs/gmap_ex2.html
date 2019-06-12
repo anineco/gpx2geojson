@@ -39,7 +39,7 @@ var param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.geojson'
 };
-var ma = location.search.substr(1).split('&').forEach(function(ma) {
+location.search.slice(1).split('&').forEach(function(ma) {
   var s = ma.split('=');
   param[s[0]] = decodeURIComponent(s[1]);
 });
@@ -79,12 +79,12 @@ window.addEventListener('DOMContentLoaded', function() {
     var html = '<h2>' + event.feature.getProperty('name') + '</h2>';
     var body = '';
     event.feature.forEachProperty(function (value, key) {
-      if (key !== 'name' && key.substr(0, 1) !== '_') {
-        body = body + '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+      if (key !== 'name' && key.charAt !== '_') {
+        body += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
       }
     });
     if (body) {
-      html = html + '<table><tbody>' + body + '</tbody></table>';
+      html += '<table><tbody>' + body + '</tbody></table>';
     }
     popup.setContent(html);
     popup.setPosition(event.latLng);

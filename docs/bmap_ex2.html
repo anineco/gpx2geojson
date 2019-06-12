@@ -21,7 +21,7 @@ var param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.geojson'
 };
-var ma = location.search.substr(1).split('&').forEach(function(ma) {
+location.search.slice(1).split('&').forEach(function(ma) {
   var s = ma.split('=');
   param[s[0]] = decodeURIComponent(s[1]);
 });
@@ -44,14 +44,14 @@ function GetMap() {
             title: shape.metadata.name
           });
         } else if (shape instanceof Microsoft.Maps.Polyline) {
-          var c = shape.metadata._color.match(/^#(..)(..)(..)$/).slice(1).map(function(h) {
+          var c = shape.metadata._color.match(/^#(..)(..)(..)$/).slice(1).map(function(h) { // IE11
             return parseInt(h, 16);
           });
           c[3] = Math.round(255 * shape.metadata._opacity);
           shape.setOptions({
             strokeThickness: shape.metadata._weight,
             strokeColor: new Microsoft.Maps.Color(c[3], c[0], c[1], c[2]),
-            strokeDashArray: shape.metadata._dashArray.split(',').map(function (v) {
+            strokeDashArray: shape.metadata._dashArray.split(',').map(function (v) { // IE11
               return v / shape.metadata._weight;
             })
           });
@@ -68,16 +68,16 @@ function GetMap() {
   Microsoft.Maps.Events.addHandler(track, 'click', function (event) {
     var shape = event.target;
     if (shape instanceof Microsoft.Maps.Pushpin) {
-      var keys = Object.keys(shape.metadata).filter(function (key) {
-        return key !== 'name' && key.substr(0, 1) !== '_';
+      var keys = Object.keys(shape.metadata).filter(function (key) { // IE11
+        return key !== 'name' && key.charAt !== '_';
       });
       var html = undefined;
       if (keys.length > 0) {
-        html = '<table><tbody>' + keys.map(function (key) {
+        html = '<table><tbody>' + keys.map(function (key) { // IE11
           return '<tr><td>' + key + '</td><td>' + shape.metadata[key] + '</td></tr>';
         }) + '</tbody></table>';
       }
-      popup._options.description = undefined; // a hack to initialize 'description'
+      popup._options.description = undefined; // NOTE: initialize 'description'
       popup.setOptions({
         location: shape.getLocation(),
         title: shape.metadata.name,

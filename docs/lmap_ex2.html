@@ -50,7 +50,7 @@ var param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.geojson'
 };
-var ma = location.search.substr(1).split('&').forEach(function(ma) {
+location.search.slice(1).split('&').forEach(function(ma) {
   var s = ma.split('=');
   param[s[0]] = decodeURIComponent(s[1]);
 });
@@ -73,12 +73,9 @@ window.addEventListener('DOMContentLoaded', function() {
   });
 
   var xhr = new XMLHttpRequest();
-//  xhr.responseType = 'json';
   xhr.addEventListener('loadend', function (e) {
-    if (this.status !== 200) {
-      return;
-    }
-    var track = L.geoJSON(JSON.parse(this.responseText), {
+    if (this.status !== 200) { return; }
+    var track = L.geoJSON(JSON.parse(this.responseText), { // IE11
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
@@ -104,11 +101,11 @@ window.addEventListener('DOMContentLoaded', function() {
     }).bindPopup(function (layer) {
       var properties = layer.feature.properties;
       var html = '<h2>' + properties.name + '</h2>';
-      var keys = Object.keys(properties).filter(function (key) {
-        return key !== 'geometry' && key !== 'name' && key.substr(0, 1) !== '_';
+      var keys = Object.keys(properties).filter(function (key) { // IE11
+        return key !== 'geometry' && key !== 'name' && key.charAt !== '_';
       });
       if (keys.length > 0) {
-        html = html + '<table><tbody>' + keys.map(function (key) {
+        html += '<table><tbody>' + keys.map(function (key) { // IE11
           return '<tr><td>' + key + '</td><td>' + properties[key] + '</td></tr>';
         }) + '</tbody></table>';
       }

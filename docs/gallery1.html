@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ルート地図（KML）</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+iframe {
+  width: 640px;
+  height: 480px;
+  border: none;
+}
+.base td {
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<h2>KML</h2>
+<table class="base">
+<tbody>
+<tr><td><iframe src="omap_ex1.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.min.kml"></iframe><br>
+(a) OpenLayers（<a href="https://github.com/anineco/gpx2geojson/blob/master/docs/omap_ex1.html">ソースコード</a>）</td></tr>
+<tr><td><iframe src="lmap_ex1.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.min.kml"></iframe><br>
+(b) Leaflet（<a href="https://github.com/anineco/gpx2geojson/blob/master/docs/lmap_ex2.html">ソースコード</a>）</td></tr>
+<tr><td><iframe src="gmap_ex1.html?lat=35.913163&lon=138.721400&zoom=15&url=https://anineco.github.io/gpx2geojson/example/routemap.min.kml"></iframe><br>
+(c) Googleマップ（<a href="https://github.com/anineco/gpx2geojson/blob/master/docs/gmap_ex2.html">ソースコード</a>）</td></tr>
+<tr><td><iframe src="ymap_ex1.html?lat=35.913163&lon=138.721400&zoom=16&url=https://anineco.github.io/gpx2geojson/example/routemap.min.kml"></iframe><br>
+(d) Yahoo!地図（<a href="https://github.com/anineco/gpx2geojson/blob/master/docs/ymap_ex2.html">ソースコード</a>）</td></tr>
+<tr><td><iframe src="bmap_ex1.html?lat=35.913163&lon=138.721400&zoom=15&url=example/routemap.min.kml"></iframe><br>
+(e) Bing Maps（<a href="https://github.com/anineco/gpx2geojson/blob/master/docs/bmap_ex2.html">ソースコード</a>）</td></tr>
+</tbody>
+</table>
+<script src="http://gist-it.appspot.com/http://github.com/anineco/gpx2geojson/blob/master/docs/omap_ex1.html"></script>
+</body>
+</html>

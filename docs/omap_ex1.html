@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ルート地図</title>
-<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
+<link rel="stylesheet" href="v5.3.0-dist/ol.css">
 <link rel="stylesheet" href="https://unpkg.com/ol-layerswitcher@3.2.0/src/ol-layerswitcher.css">
 <style>
 body {
@@ -89,15 +89,15 @@ body {
 <span id="popup-closer" class="ol-popup-closer"></span>
 <div id="popup-content"></div>
 </div>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
-<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script> // IE11
+<script src="v5.3.0-dist/ol.js"></script>
 <script src="https://unpkg.com/ol-layerswitcher@3.2.0"></script>
 <script>
 var param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml'
 };
-var ma = location.search.substr(1).split('&').forEach(function(ma) {
+location.search.slice(1).split('&').forEach(function(ma) {
   var s = ma.split('=');
   param[s[0]] = decodeURIComponent(s[1]);
 });
@@ -195,6 +195,10 @@ window.addEventListener('DOMContentLoaded', function() {
     map.getTargetElement().style.cursor = found ? 'pointer' : '';
   });
 
+  function getHtml(feature) {
+    return html = '<h2>' + feature.get('name') + '</h2>' + (feature.get('description') || '');
+  }
+
   var content = document.getElementById('popup-content');
   map.on('click', function(evt) {
     var found = map.forEachFeatureAtPixel(
@@ -203,7 +207,7 @@ window.addEventListener('DOMContentLoaded', function() {
         if (feature.getGeometry().getType() !== 'Point') {
           return false;
         }
-        content.innerHTML = '<h2>' + feature.get('name') + '</h2>' + (feature.get('description') || '');
+        content.innerHTML = getHtml(feature);
         return true;
       }
     );
