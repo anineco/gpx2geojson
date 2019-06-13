@@ -1,5 +1,6 @@
 package iconlut;
 use strict;
+use warnings;
 my %iconlut = (
 951001 => 'Flag_Blue',
 951002 => 'Flag_Green',
@@ -118,6 +119,15 @@ my %iconlut = (
 956028 => 'Zoo'
 );
 sub iconUrl {
-  return "https://anineco.org/symbols/$iconlut{$_[0]}.png";
+  my $icon = $_[0];
+  return "https://anineco.org/symbols/$iconlut{$icon}.png";
+}
+sub iconSize {
+  my $icon = $_[0];
+  return [24, 24];
+}
+sub iconAnchor {
+  my $icon = $_[0];
+  return [12, 12];
 }
 1;

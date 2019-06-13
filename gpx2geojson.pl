@@ -19,16 +19,24 @@ use open ':std';
 use XML::Simple qw(:strict);
 use JSON;
 use File::Basename qw(dirname);
-use File::Temp qw(:POSIX);
 use File::HomeDir;
+use File::Temp qw(:POSIX);
+use IPC::Open2;
 use Tk;
-if ($^O eq 'MSWin32') {
-  use Win32::Process;
+use constant {
+  OS_MSWIN => $^O eq 'MSWin32',
+  GPSBABEL => 'C:\Program Files (x86)\GPSBabel\gpsbabel.exe' # full path of executable file
+};
+BEGIN {
+  if (OS_MSWIN) {
+    require Win32::Process;
+    Win32::Process->import();
+  }
 }
 # include iconlut.pm
 use FindBin qw($Bin);
 use lib "$Bin";
-use iconlut;
+require iconlut; # customize icon for waypoint
 
 my $version = '0.9';
 
@@ -89,13 +97,14 @@ sub readGpxFiles {
 
 sub pointFeature {
   my $p = $_[0]; # wpt or rtept
+  my $icon = $p->{extensions}->{'kashmir3d:icon'};
   my $q = {
     type => 'Feature',
     properties => {
       name => $p->{name},
-      _iconUrl => iconlut::iconUrl($p->{extensions}->{'kashmir3d:icon'}),
-      _iconSize => [24,24], # FIXME: hard-coded parameter
-      _iconAnchor => [12,12] # FIXME: hard-coded parameter
+      _iconUrl => iconlut::iconUrl($icon),
+      _iconSize => iconlut::iconSize($icon),
+      _iconAnchor => iconlut::iconAnchor($icon)
     },
     geometry => {
       type => 'Point',
@@ -142,6 +151,26 @@ sub getProperties {
 
 my $n_point; # number of track points after conversion
 
+sub writeTrkseg {
+  my ($out, $p) = @_; # trkseg
+  print $out "<gpx><trk><trkseg>\n";
+  foreach my $trkpt (@{$p->{trkpt}}) {
+    print $out qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"/>\n!;
+  }
+  print $out "</trkseg></trk></gpx>\n";
+}
+
+sub readTrkseg {
+  my ($in, $q) = @_; # 'LineString' feature
+  my $i = 0;
+  while (<$in>) {
+    next if (!/<trkpt/);
+    m%<trkpt lat="(.*)" lon="(.*)"/>%;
+    @{$q->{geometry}->{coordinates}[$i++]} = (0+sprintf("%.6f",$2), 0+sprintf("%.6f",$1));
+  }
+  $n_point += $i;
+}
+
 sub lineStringFeature {
   my ($p, $tag, $properties) = @_; # rte or trkseg
   my $q = {
@@ -161,37 +190,34 @@ sub lineStringFeature {
     return $q;
   }
 # decimate track points in a segment using gpsbabel
-  my $tmp1 = tmpnam();
-  my $tmp2 = tmpnam();
-  open(my $out, ">$tmp1");
-  print $out "<gpx><trk><trkseg>\n";
-  foreach my $trkpt (@{$p->{trkpt}}) {
-    print $out qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"/>\n!;
-  }
-  print $out "</trkseg></trk></gpx>\n";
-  close($out);
-
-  my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
-  if ($^O eq 'MSWin32') {
-    # call external program without opening unsightly console window
-    Win32::Process::Create(my $process,
-      'C:\Program Files (x86)\GPSBabel\gpsbabel.exe', # full path of executable file
-      $cmd, 0, CREATE_NO_WINDOW, '.'
-    );
-    $process->Wait(INFINITE);
+  if (0) {
+    my $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx -F -";
+    open2(my $in, my $out, $cmd);
+    writeTrkseg($out, $p);
+    close($out);
+    readTrkseg($in, $q);
+    close($in);
   } else {
-    system($cmd);
-  }
+    my $tmp1 = tmpnam();
+    my $tmp2 = tmpnam();
+    my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
+    open(my $out, '>', $tmp1);
+    writeTrkseg($out, $p);
+    close($out);
 
-  open(my $in, "<$tmp2");
-  while (<$in>) {
-    next if (!/<trkpt/);
-    m%<trkpt lat="(.*)" lon="(.*)"/>%;
-    @{$q->{geometry}->{coordinates}[$i++]} = (0+sprintf("%.6f",$2), 0+sprintf("%.6f",$1));
+    if (OS_MSWIN) {
+      # execute external program without opening unsightly window
+      Win32::Process::Create(my $process, GPSBABEL, $cmd, 0, CREATE_NO_WINDOW, '.');
+      $process->Wait(INFINITE);
+    } else {
+      system($cmd);
+    }
+
+    open(my $in, '<', $tmp2);
+    readTrkseg($in, $q);
+    close($in);
+    unlink $tmp1, $tmp2;
   }
-  close($in);
-  $n_point += $i;
-  unlink $tmp1, $tmp2;
   return $q;
 }
 
@@ -385,5 +411,4 @@ $top->Button(-text => '終了', -command => sub {
 })->grid(-row => 9, -column => 4);
 
 MainLoop();
-
 __END__
