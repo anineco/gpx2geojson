@@ -1,25 +1,29 @@
 #!/usr/bin/env perl
 # kml2geojson.pl
 # Script for migrating gpx2jsgi-converted KML files separately to GeoJSON files
+#
 # Copyright (c) 2019 anineco@nifty.com
 # Released under the MIT license
-# https://opensource.org/licenses/mit-license.php
+# https://github.com/anineco/gpx2geojson/blob/master/LICENSE
 
 use strict;
 use warnings;
 use utf8;
 use open ':utf8';
 use open ':std';
-use XML::Simple;
+use XML::Simple qw(:strict);
 use JSON;
-# use Data::Dumper;
+# include iconlut.pm
+use FindBin qw($Bin);
+use lib "$Bin";
+require iconlut; # customize icon for waypoint
 
 if (@ARGV == 0) {
   die "Usage: kml2geojson.pl kmlfiles\n";
 }
 
 sub dehtml {
-  my $s = $_[0]; # description
+  my $s = shift; # description
   $s =~ s%^<table><tr><td>%%;
   $s =~ s%</td></tr></table>$%%;
   $s =~ s%</td></tr><tr><td>%,%g;
@@ -29,17 +33,16 @@ sub dehtml {
 
 sub pointFeature {
   my ($p, $id, $style) = @_;
-# my $icon = substr($id, 1); # delete the first character 'N'
-# my $href = "https://map.jpn.org/icon/$icon.png";
-  my $href = $style->{IconStyle}->{Icon}->{href};
+  my $icon = substr($id, 1); # delete the first character 'N'
   my ($lon,$lat,$alt) = split /,/, $p->{Point}->{coordinates};
   my $q = {
     type => 'Feature',
     properties => {
       name => $p->{name},
-      _iconUrl => $href,
-      _iconSize => [24,24],
-      _iconAnchor => [12,12]
+#     _iconUrl => $style->{IconStyle}->{Icon}->{href},
+      _iconUrl => iconlut::iconUrl($icon),
+      _iconSize => iconlut::iconSize($icon),
+      _iconAnchor => iconlut::iconAnchor($icon)
     },
     geometry => {
       type => 'Point',
@@ -87,7 +90,7 @@ sub lineStringFeature {
 }
 
 sub kml2geojson {
-  my $kml = $_[0];
+  my $kml = shift;
   my $q = {
     type => 'FeatureCollection',
     features => []

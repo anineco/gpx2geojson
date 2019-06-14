@@ -3,10 +3,10 @@
 # GUI application for merging kashmir3d-generated GPX files
 # and converting into GeoJSON file with style specified in
 # https://github.com/gsi-cyberjapan/geojson-with-style-spec
-
+#
 # Official website:
 # https://github.com/anineco/gpx2geojson
-
+#
 # Copyright (c) 2019 anineco@nifty.com
 # Released under the MIT license
 # https://github.com/anineco/gpx2geojson/blob/master/LICENSE
@@ -21,12 +21,10 @@ use JSON;
 use File::Basename qw(dirname);
 use File::HomeDir;
 use File::Temp qw(:POSIX);
+use File::Spec;
 use IPC::Open2;
 use Tk;
-use constant {
-  OS_MSWIN => $^O eq 'MSWin32',
-  GPSBABEL => 'C:\Program Files (x86)\GPSBabel\gpsbabel.exe' # full path of executable file
-};
+use constant OS_MSWIN => $^O eq 'MSWin32';
 BEGIN {
   if (OS_MSWIN) {
     require Win32::Process;
@@ -38,8 +36,6 @@ use FindBin qw($Bin);
 use lib "$Bin";
 require iconlut; # customize icon for waypoint
 
-my $version = '0.9';
-
 my %param = (
   line_style => 13,
   line_size => 3,
@@ -50,10 +46,10 @@ my %param = (
   outdir => ''
 );
 
-my $home = File::HomeDir->my_home;
+my $dotfile = File::Spec->catfile(File::HomeDir->my_home, '.gpx2geojson');
 
-sub openParam {
-  open(my $in, "<$home/.gpx2geojson") or return;
+sub open_param {
+  open(my $in, '<', $dotfile) or return;
   while (<$in>) {
     chomp;
     my ($k, $v) = split('=');
@@ -64,10 +60,10 @@ sub openParam {
   close($in);
 }
 
-sub saveParam {
-  open(my $out, ">$home/.gpx2geojson") or return;
-  foreach (keys(%param)) {
-    print $out "$_=$param{$_}\n";
+sub save_param {
+  open(my $out, '>', $dotfile) or return;
+  foreach my $key (keys(%param)) {
+    print $out "$key=$param{$key}\n";
   }
   close($out);
 }
@@ -77,7 +73,7 @@ my $parser = XML::Simple->new(
   keyattr => []
 );
 
-sub readGpxFiles {
+sub read_gpxfiles {
   my @files = @_;
   my $gpx = {wpt => [], rte => [], trk => []};
 # merge GPX files
@@ -96,7 +92,7 @@ sub readGpxFiles {
 }
 
 sub pointFeature {
-  my $p = $_[0]; # wpt or rtept
+  my $p = shift; # wpt or rtept
   my $icon = $p->{extensions}->{'kashmir3d:icon'};
   my $q = {
     type => 'Feature',
@@ -114,7 +110,7 @@ sub pointFeature {
   @{$q->{geometry}->{coordinates}} = (0+$p->{lon}, 0+$p->{lat});
   foreach my $kv (split /,/, $p->{cmt}) {
     my ($k,$v) = split /=/, $kv;
-    if ($k !~ /^[[:blank:]]*$/) {
+    if ($k !~ /^[[:blank:]]*$/) { # using POSIX character class
       $q->{properties}->{$k} = $v;
     }
   }
@@ -130,8 +126,8 @@ my %dash = (
   15 => [1,2,1,2,6,2] # dot-dot-dash (two-dot chain)
 );
 
-sub getProperties {
-  my $p = $_[0]; # rte or trk
+sub get_properties {
+  my $p = shift; # rte or trk
   $p->{extensions}->{'kashmir3d:line_color'} =~ /^(..)(..)(..)$/;
   my $c = "#$3$2$1";
   my $w = 0 + ($param{line_size} ? $param{line_size}
@@ -151,7 +147,7 @@ sub getProperties {
 
 my $n_point; # number of track points after conversion
 
-sub writeTrkseg {
+sub write_trkseg {
   my ($out, $p) = @_; # trkseg
   print $out "<gpx><trk><trkseg>\n";
   foreach my $trkpt (@{$p->{trkpt}}) {
@@ -160,8 +156,8 @@ sub writeTrkseg {
   print $out "</trkseg></trk></gpx>\n";
 }
 
-sub readTrkseg {
-  my ($in, $q) = @_; # 'LineString' feature
+sub read_trkseg {
+  my ($in, $q) = @_;
   my $i = 0;
   while (<$in>) {
     next if (!/<trkpt/);
@@ -181,48 +177,49 @@ sub lineStringFeature {
       coordinates => []
     }
   };
-  my $i = 0;
   if ($tag eq 'rtept' or !$param{xt_state}) {
-    foreach (@{$p->{$tag}}) {
-      @{$q->{geometry}->{coordinates}[$i++]} = (0+$_->{lon}, 0+$_->{lat});
+    my $i = 0;
+    foreach my $pt (@{$p->{$tag}}) {
+      @{$q->{geometry}->{coordinates}[$i++]} = (0+$pt->{lon}, 0+$pt->{lat});
     }
     $n_point += $i;
     return $q;
   }
+
 # decimate track points in a segment using gpsbabel
-  if (0) {
-    my $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx -F -";
-    open2(my $in, my $out, $cmd);
-    writeTrkseg($out, $p);
-    close($out);
-    readTrkseg($in, $q);
-    close($in);
-  } else {
+  my $cmd;
+  if (OS_MSWIN) {
     my $tmp1 = tmpnam();
     my $tmp2 = tmpnam();
-    my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
     open(my $out, '>', $tmp1);
-    writeTrkseg($out, $p);
+    write_trkseg($out, $p);
     close($out);
+    $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
 
-    if (OS_MSWIN) {
-      # execute external program without opening unsightly window
-      Win32::Process::Create(my $process, GPSBABEL, $cmd, 0, CREATE_NO_WINDOW, '.');
-      $process->Wait(INFINITE);
-    } else {
-      system($cmd);
-    }
+    # since system($cmd) opens annoying console window, call gpsbabel.exe directly
+    Win32::Process::Create(my $process,
+      'C:\Program Files (x86)\GPSBabel\gpsbabel.exe', # FIXME: hard-coded
+      $cmd, 0, CREATE_NO_WINDOW, '.'
+    );
+    $process->Wait(INFINITE);
 
     open(my $in, '<', $tmp2);
-    readTrkseg($in, $q);
+    read_trkseg($in, $q);
     close($in);
     unlink $tmp1, $tmp2;
+    return $q;
   }
+  $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx -F -";
+  open2(my $in, my $out, $cmd);
+  write_trkseg($out, $p);
+  close($out);
+  read_trkseg($in, $q);
+  close($in);
   return $q;
 }
 
 sub gpx2geojson {
-  my $gpx = $_[0];
+  my $gpx = shift;
   $n_point = 0;
   my $q = {
     type => 'FeatureCollection',
@@ -239,11 +236,11 @@ sub gpx2geojson {
       next if ($rtept->{extensions}->{'kashmir3d:icon'} eq '901001'); # skip blank icon
       $q->{features}[$n++] = pointFeature($rtept);
     }
-    $q->{features}[$n++] = lineStringFeature($rte, 'rtept', getProperties($rte));
+    $q->{features}[$n++] = lineStringFeature($rte, 'rtept', get_properties($rte));
   }
 
   foreach my $trk (@{$gpx->{trk}}) {
-    my $properties = getProperties($trk);
+    my $properties = get_properties($trk);
     foreach my $trkseg (@{$trk->{trkseg}}) {
       $q->{features}[$n++] = lineStringFeature($trkseg, 'trkpt', $properties);
     }
@@ -251,12 +248,12 @@ sub gpx2geojson {
   return $q;
 }
 
-openParam();
+open_param();
 
 # command line interface
 
 if (@ARGV > 0) {
-  my $gpx = readGpxFiles(@ARGV);
+  my $gpx = read_gpxfiles(@ARGV);
   my $geojson = gpx2geojson($gpx);
   print JSON->new->pretty->encode($geojson);
   exit;
@@ -269,7 +266,7 @@ $top->optionAdd('*font', ['MS Gothic', 10]);
 $top->title('GPX2GeoJSON');
 $top->resizable(0, 0);
 $top->Label(
-  -text => "GPX→GeoJSONコンバータ Ver.$version"
+  -text => 'GPX→GeoJSONコンバータ'
 )->grid(-row => 0, -column => 0, -columnspan => 5);
 
 $top->Label(-text => 'GPXファイル')->grid(-row => 1, -column => 0, -sticky => 'e');
@@ -341,17 +338,17 @@ my $sizes =  [['GPX', 0], [' 1pt', 1], [' 3pt',  3], [' 5pt',  5]];
 my $f1 = $top->Frame(
   -borderwidth => 2, -relief => 'sunken'
 )->grid(-row => 7, -column => 1, -sticky => 'nsew');
-foreach (@{$styles}) {
+foreach my $pair (@{$styles}) {
   $f1->Radiobutton(
-    -text => $_->[0], -value => $_->[1], -variable => \$param{line_style}
+    -text => $pair->[0], -value => $pair->[1], -variable => \$param{line_style}
   )->pack(-side => 'left');
 }
 my $f2 = $top->Frame(
   -borderwidth => 2, -relief => 'sunken'
 )->grid(-row => 8, -column => 1, -sticky => 'nsew');
-foreach (@{$sizes}) {
+foreach my $pair (@{$sizes}) {
   $f2->Radiobutton(
-    -text => $_->[0], -value => $_->[1], -variable => \$param{line_size}
+    -text => $pair->[0], -value => $pair->[1], -variable => \$param{line_size}
   )->pack(-side => 'left');
 }
 
@@ -393,9 +390,9 @@ $top->Button(-text => '変換', -command => sub {
     );
     return;
   }
-  my $gpx = readGpxFiles($gpxfiles->get(0, 'end'));
+  my $gpx = read_gpxfiles($gpxfiles->get(0, 'end'));
   my $geojson = gpx2geojson($gpx);
-  my $ret = open(my $out, ">$outfile");
+  my $ret = open(my $out, '>', $outfile);
   print $out JSON->new->utf8(0)->encode($geojson), "\n";
   close($out);
   $top->messageBox(-type => 'ok',
@@ -406,7 +403,7 @@ $top->Button(-text => '変換', -command => sub {
 })->grid(-row => 9, -column => 1);
 
 $top->Button(-text => '終了', -command => sub {
-  saveParam();
+  save_param();
   $top->destroy();
 })->grid(-row => 9, -column => 4);
 

@@ -119,15 +119,15 @@ my %iconlut = (
 956028 => 'Zoo'
 );
 sub iconUrl {
-  my $icon = $_[0];
+  my $icon = shift;
   return "https://anineco.org/symbols/$iconlut{$icon}.png";
 }
 sub iconSize {
-  my $icon = $_[0];
+  my $icon = shift;
   return [24, 24];
 }
 sub iconAnchor {
-  my $icon = $_[0];
+  my $icon = shift;
   return [12, 12];
 }
 1;
