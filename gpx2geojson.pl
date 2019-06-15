@@ -31,10 +31,12 @@ BEGIN {
     Win32::Process->import();
   }
 }
-# include iconlut.pm
+# include iconlut.pm for customizing icon of waypoint
 use FindBin qw($Bin);
 use lib "$Bin";
-require iconlut; # customize icon for waypoint
+require iconlut;
+
+my $version = "0.9";
 
 my %param = (
   line_style => 13,
@@ -52,7 +54,7 @@ sub open_param {
   open(my $in, '<', $dotfile) or return;
   while (<$in>) {
     chomp;
-    my ($k, $v) = split('=');
+    my ($k, $v) = split '=';
     if (exists($param{$k})) {
       $param{$k} = $v;
     }
@@ -63,7 +65,7 @@ sub open_param {
 sub save_param {
   open(my $out, '>', $dotfile) or return;
   foreach my $key (keys(%param)) {
-    print $out "$key=$param{$key}\n";
+    print $out $key, '=', $param{$key}, "\n";
   }
   close($out);
 }
@@ -91,30 +93,29 @@ sub read_gpxfiles {
   return $gpx;
 }
 
-sub pointFeature {
-  my $p = shift; # wpt or rtept
-  my $icon = $p->{extensions}->{'kashmir3d:icon'};
-  my $q = {
+sub get_point_feature {
+  my $pt = shift; # wpt or rtept
+  my $icon = $pt->{extensions}->{'kashmir3d:icon'};
+  my $feature = {
     type => 'Feature',
     properties => {
-      name => $p->{name},
+      name => $pt->{name},
       _iconUrl => iconlut::iconUrl($icon),
       _iconSize => iconlut::iconSize($icon),
       _iconAnchor => iconlut::iconAnchor($icon)
     },
     geometry => {
       type => 'Point',
-      coordinates => []
+      coordinates => [0+$pt->{lon}, 0+$pt->{lat}]
     }
   };
-  @{$q->{geometry}->{coordinates}} = (0+$p->{lon}, 0+$p->{lat});
-  foreach my $kv (split /,/, $p->{cmt}) {
-    my ($k,$v) = split /=/, $kv;
-    if ($k !~ /^[[:blank:]]*$/) { # using POSIX character class
-      $q->{properties}->{$k} = $v;
+  foreach (split /,/, $pt->{cmt}) {
+    my ($key, $value) = split /=/;
+    if ($key !~ /^[[:blank:]]*$/) { # using POSIX character class
+      $feature->{properties}->{$key} = $value;
     }
   }
-  return $q;
+  return $feature;
 }
 
 my %dash = (
@@ -127,49 +128,47 @@ my %dash = (
 );
 
 sub get_properties {
-  my $p = shift; # rte or trk
-  $p->{extensions}->{'kashmir3d:line_color'} =~ /^(..)(..)(..)$/;
+  my $t = shift; # trk or rte
+  $t->{extensions}->{'kashmir3d:line_color'} =~ /^(..)(..)(..)$/;
   my $c = "#$3$2$1";
-  my $w = 0 + ($param{line_size} ? $param{line_size}
-                                 : $p->{extensions}->{'kashmir3d:line_size'});
-  my $q = {
+  my $w = 0+($param{line_size} || $t->{extensions}->{'kashmir3d:line_size'});
+  my $properties = {
     _color => $c,
     _weight => $w,
     _opacity => $param{opacity}
   };
-  my $s = $dash{$param{line_style} ? $param{line_style}
-                                   : $p->{extensions}->{'kashmir3d:line_style'}};
+  my $s = $dash{$param{line_style} || $t->{extensions}->{'kashmir3d:line_style'}};
   if ($s) {
-    $q->{_dashArray} = join(',', map { ($_ * $w) . '' } @{$s});
+    $properties->{_dashArray} = join ',', map { '' . ($_ * $w) } @{$s};
   }
-  return $q;
+  return $properties;
 }
 
 my $n_point; # number of track points after conversion
 
 sub write_trkseg {
-  my ($out, $p) = @_; # trkseg
+  my ($out, $trkseg) = @_;
   print $out "<gpx><trk><trkseg>\n";
-  foreach my $trkpt (@{$p->{trkpt}}) {
+  foreach my $trkpt (@{$trkseg->{trkpt}}) {
     print $out qq!<trkpt lat="$trkpt->{lat}" lon="$trkpt->{lon}"/>\n!;
   }
   print $out "</trkseg></trk></gpx>\n";
 }
 
 sub read_trkseg {
-  my ($in, $q) = @_;
+  my ($in, $feature) = @_;
   my $i = 0;
   while (<$in>) {
     next if (!/<trkpt/);
     m%<trkpt lat="(.*)" lon="(.*)"/>%;
-    @{$q->{geometry}->{coordinates}[$i++]} = (0+sprintf("%.6f",$2), 0+sprintf("%.6f",$1));
+    @{$feature->{geometry}->{coordinates}[$i++]} = (0+sprintf("%.6f",$2), 0+sprintf("%.6f",$1));
   }
   $n_point += $i;
 }
 
-sub lineStringFeature {
-  my ($p, $tag, $properties) = @_; # rte or trkseg
-  my $q = {
+sub get_linestring_feature {
+  my ($segment, $tag, $properties) = @_; # trkseg or rte
+  my $feature = {
     type => 'Feature',
     properties => $properties,
     geometry => {
@@ -179,22 +178,21 @@ sub lineStringFeature {
   };
   if ($tag eq 'rtept' or !$param{xt_state}) {
     my $i = 0;
-    foreach my $pt (@{$p->{$tag}}) {
-      @{$q->{geometry}->{coordinates}[$i++]} = (0+$pt->{lon}, 0+$pt->{lat});
+    foreach (@{$segment->{$tag}}) {
+      @{$feature->{geometry}->{coordinates}[$i++]} = (0+$_->{lon}, 0+$_->{lat});
     }
     $n_point += $i;
-    return $q;
+    return $feature;
   }
 
 # decimate track points in a segment using gpsbabel
-  my $cmd;
   if (OS_MSWIN) {
     my $tmp1 = tmpnam();
     my $tmp2 = tmpnam();
     open(my $out, '>', $tmp1);
-    write_trkseg($out, $p);
+    write_trkseg($out, $segment);
     close($out);
-    $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
+    my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
 
     # since system($cmd) opens annoying console window, call gpsbabel.exe directly
     Win32::Process::Create(my $process,
@@ -204,48 +202,48 @@ sub lineStringFeature {
     $process->Wait(INFINITE);
 
     open(my $in, '<', $tmp2);
-    read_trkseg($in, $q);
+    read_trkseg($in, $feature);
     close($in);
     unlink $tmp1, $tmp2;
-    return $q;
+  } else {
+    my $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx -F -";
+    open2(my $in, my $out, $cmd);
+    write_trkseg($out, $segment);
+    close($out);
+    read_trkseg($in, $feature);
+    close($in);
   }
-  $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx -F -";
-  open2(my $in, my $out, $cmd);
-  write_trkseg($out, $p);
-  close($out);
-  read_trkseg($in, $q);
-  close($in);
-  return $q;
+  return $feature;
 }
 
 sub gpx2geojson {
   my $gpx = shift;
   $n_point = 0;
-  my $q = {
+  my $geojson = {
     type => 'FeatureCollection',
     features => []
   };
   my $n = 0;
 
   foreach my $wpt (@{$gpx->{wpt}}) {
-    $q->{features}[$n++] = pointFeature($wpt);
+    $geojson->{features}[$n++] = get_point_feature($wpt);
   }
 
   foreach my $rte (@{$gpx->{rte}}) {
     foreach my $rtept (@{$rte->{rtept}}) {
       next if ($rtept->{extensions}->{'kashmir3d:icon'} eq '901001'); # skip blank icon
-      $q->{features}[$n++] = pointFeature($rtept);
+      $geojson->{features}[$n++] = get_point_feature($rtept);
     }
-    $q->{features}[$n++] = lineStringFeature($rte, 'rtept', get_properties($rte));
+    $geojson->{features}[$n++] = get_linestring_feature($rte, 'rtept', get_properties($rte));
   }
 
   foreach my $trk (@{$gpx->{trk}}) {
     my $properties = get_properties($trk);
     foreach my $trkseg (@{$trk->{trkseg}}) {
-      $q->{features}[$n++] = lineStringFeature($trkseg, 'trkpt', $properties);
+      $geojson->{features}[$n++] = get_linestring_feature($trkseg, 'trkpt', $properties);
     }
   }
-  return $q;
+  return $geojson;
 }
 
 open_param();
@@ -255,7 +253,7 @@ open_param();
 if (@ARGV > 0) {
   my $gpx = read_gpxfiles(@ARGV);
   my $geojson = gpx2geojson($gpx);
-  print JSON->new->pretty->encode($geojson);
+  print JSON->new->utf8(0)->encode($geojson);
   exit;
 }
 
@@ -266,11 +264,20 @@ $top->optionAdd('*font', ['MS Gothic', 10]);
 $top->title('GPX2GeoJSON');
 $top->resizable(0, 0);
 $top->Label(
-  -text => 'GPX→GeoJSONコンバータ'
+  -text => "GPX→GeoJSONコンバータ Ver.$version"
 )->grid(-row => 0, -column => 0, -columnspan => 5);
 
-$top->Label(-text => 'GPXファイル')->grid(-row => 1, -column => 0, -sticky => 'e');
+$top->Label(-text => 'GPXファイル' )->grid(-row => 1, -column => 0, -sticky => 'e');
 $top->Label(-text => '出力ファイル')->grid(-row => 4, -column => 0, -sticky => 'e');
+$top->Label(-text => '変換設定'    )->grid(-row => 5, -column => 1, -sticky => 'ew');
+$top->Label(-text => '線の透過率'  )->grid(-row => 6, -column => 0, -sticky => 'e');
+$top->Label(-text => '線種'        )->grid(-row => 7, -column => 0, -sticky => 'e');
+$top->Label(-text => '線幅'        )->grid(-row => 8, -column => 0, -sticky => 'e');
+$top->Label(-text => '許容誤差[km]')->grid(-row => 6, -column => 2, -sticky => 'e');
+$top->Label(-text => '変換結果情報')->grid(-row => 7, -column => 3, -sticky => 'w');
+$top->Label(-text => '軌跡点数'    )->grid(-row => 8, -column => 2, -sticky => 'e');
+
+# GPXファイル
 
 my $gpxfiles = $top->Scrolled('Listbox',
   -scrollbars => 'oe',
@@ -279,50 +286,63 @@ my $gpxfiles = $top->Scrolled('Listbox',
   -height => 3
 )->grid(-row => 1, -column => 1, -rowspan => 3, -columnspan => 3, -sticky => 'nsew');
 
-$top->Button(-text => '←追加', -command => sub {
-  my $ret = $top->getOpenFile(
-    -filetypes => [['GPXファイル', '.gpx'], ['すべて', '*']],
-    -initialdir => $param{indir},
-    -multiple => 'yes'
-  );
-  foreach my $path (@{$ret}) {
-    $gpxfiles->insert('end', $path);
-    $param{indir} = dirname($path);
+$top->Button(
+  -text => '←追加',
+  -command => sub {
+    my $ret = $top->getOpenFile(
+      -filetypes => [['GPXファイル', '.gpx'], ['すべて', '*']],
+      -initialdir => $param{indir},
+      -multiple => 'yes'
+    );
+    foreach my $path (@{$ret}) {
+      $gpxfiles->insert('end', $path);
+      $param{indir} = dirname($path);
+    }
   }
-})->grid(-row => 1, -column => 4, -sticky => 'ew');
+)->grid(-row => 1, -column => 4, -sticky => 'ew');
 
-$top->Button(-text => '除外', -command => sub {
-  my $i = $gpxfiles->curselection;
-  if ($i ne "") { $gpxfiles->delete($i); }
-})->grid(-row => 2, -column => 4, -sticky => 'ew');
+$top->Button(
+  -text => '除外',
+  -command => sub {
+    my $i = $gpxfiles->curselection;
+    if ($i ne "") {
+      $gpxfiles->delete($i);
+    }
+  }
+)->grid(-row => 2, -column => 4, -sticky => 'ew');
 
-$top->Button(-text => 'クリア', -command => sub {
-  $gpxfiles->delete(0, 'end');
-})->grid(-row => 3, -column => 4, -sticky => 'ew');
+$top->Button(
+  -text => 'クリア',
+  -command => sub {
+    $gpxfiles->delete(0, 'end');
+  }
+)->grid(-row => 3, -column => 4, -sticky => 'ew');
+
+# 出力ファイル
 
 my $outfile = '';
 
 $top->Entry(
   -textvariable => \$outfile
 )->grid(-row => 4, -column => 1, -columnspan => 3, -sticky => 'nsew');
-$top->Button(-text => '選択', -command => sub {
-  my $ret = $top->getSaveFile(
-    -filetypes => [['GeoJSONファイル', '.geojson'], ['すべて', '*']],
-    -initialdir => $param{outdir} ? $param{outdir} : $param{indir},
-    -initialfile => 'routemap.geojson',
-    -defaultextension => '.geojson'
-  );
-  if (defined($ret)) {
-    $outfile = $ret;
-    $param{outdir} = dirname($ret);
-  }
-})->grid(-row => 4, -column => 4, -sticky => 'ew');
 
-$top->Label(-text => '変換設定')->grid(-row => 5, -column => 1, -sticky => 'ew');
-$top->Label(-text => '線の透過率')->grid(-row => 6, -column => 0, -sticky => 'e');
-$top->Label(-text => '線種')->grid(-row => 7, -column => 0, -sticky => 'e');
-$top->Label(-text => '線幅')->grid(-row => 8, -column => 0, -sticky => 'e');
-$top->Label(-text => '許容誤差[km]')->grid(-row => 6, -column => 2, -sticky => 'e');
+$top->Button(
+  -text => '選択',
+  -command => sub {
+    my $ret = $top->getSaveFile(
+      -filetypes => [['GeoJSONファイル', '.geojson'], ['すべて', '*']],
+      -initialdir => $param{outdir} ? $param{outdir} : $param{indir},
+      -initialfile => 'routemap.geojson',
+      -defaultextension => '.geojson'
+    );
+    if (defined($ret)) {
+      $outfile = $ret;
+      $param{outdir} = dirname($ret);
+    }
+  }
+)->grid(-row => 4, -column => 4, -sticky => 'ew');
+
+# 線の透過率
 
 $top->Spinbox(
   -textvariable => \$param{opacity},
@@ -332,25 +352,39 @@ $top->Spinbox(
   -increment => 0.1
 )->grid(-row => 6, -column => 1, -sticky => 'nsew');
 
+# 線種
+
 my $styles = [['GPX', 0], ['実線', 1], ['破線', 11], ['点線', 13]];
-my $sizes =  [['GPX', 0], [' 1pt', 1], [' 3pt',  3], [' 5pt',  5]];
 
 my $f1 = $top->Frame(
   -borderwidth => 2, -relief => 'sunken'
 )->grid(-row => 7, -column => 1, -sticky => 'nsew');
+
 foreach my $pair (@{$styles}) {
   $f1->Radiobutton(
-    -text => $pair->[0], -value => $pair->[1], -variable => \$param{line_style}
+    -text => $pair->[0],
+    -value => $pair->[1],
+    -variable => \$param{line_style}
   )->pack(-side => 'left');
 }
+
+# 線幅
+
+my $sizes =  [['GPX', 0], [' 1pt', 1], [' 3pt',  3], [' 5pt',  5]];
+
 my $f2 = $top->Frame(
   -borderwidth => 2, -relief => 'sunken'
 )->grid(-row => 8, -column => 1, -sticky => 'nsew');
+
 foreach my $pair (@{$sizes}) {
   $f2->Radiobutton(
-    -text => $pair->[0], -value => $pair->[1], -variable => \$param{line_size}
+    -text => $pair->[0],
+    -value => $pair->[1],
+    -variable => \$param{line_size}
   )->pack(-side => 'left');
 }
+
+# 許容誤差
 
 my $xt_widget = $top->Spinbox(
   -textvariable => \$param{xt_error},
@@ -369,13 +403,15 @@ $top->Checkbutton(
   }
 )->grid(-row => 5, -column => 3, -sticky => 'w');
 
-$top->Label(-text => '変換結果情報')->grid(-row => 7, -column => 3, -sticky => 'w');
-$top->Label(-text => '軌跡点数')->grid(-row => 8, -column => 2, -sticky => 'e');
+# 軌跡点数
+
 $top->Entry(
   -textvariable => \$n_point,
   -foreground => 'blue',
   -state => 'readonly'
 )->grid(-row => 8, -column => 3, -sticky => 'nsew');
+
+# 変換
 
 $top->Button(-text => '変換', -command => sub {
   if ($gpxfiles->size == 0) {
@@ -386,21 +422,29 @@ $top->Button(-text => '変換', -command => sub {
   }
   if ($outfile eq '') {
     $top->messageBox(-type => 'ok', -icon => 'warning', -title => '警告',
-      -message => '出力ファイルが未設定'
+      -message => '出力ファイルが未設定',
     );
     return;
   }
-  my $gpx = read_gpxfiles($gpxfiles->get(0, 'end'));
-  my $geojson = gpx2geojson($gpx);
-  my $ret = open(my $out, '>', $outfile);
-  print $out JSON->new->utf8(0)->encode($geojson), "\n";
-  close($out);
-  $top->messageBox(-type => 'ok',
-    -title => $ret ? '成功' : '失敗',
-    -message => $ret ? "変換結果を${outfile}に出力しました"
-                     : "変換結果が${outfile}に出力できません"
-  );
+  eval {
+    my $gpx = read_gpxfiles($gpxfiles->get(0, 'end'));
+    my $geojson = gpx2geojson($gpx);
+    open(my $out, '>', $outfile) or die "Can't open $outfile: $!";
+    print $out JSON->new->utf8(0)->encode($geojson), "\n";
+    close($out);
+  };
+  if (my $msg = $@) {
+    $top->messageBox(-type => 'ok', -icon => 'error', -title => 'エラー',
+      -message => $msg
+    );
+  } else {
+    $top->messageBox(-type => 'ok', -icon => 'info', -title => '成功',
+      -message => "変換結果を${outfile}に出力しました"
+    );
+  }
 })->grid(-row => 9, -column => 1);
+
+# 終了
 
 $top->Button(-text => '終了', -command => sub {
   save_param();
@@ -408,4 +452,5 @@ $top->Button(-text => '終了', -command => sub {
 })->grid(-row => 9, -column => 4);
 
 MainLoop();
+
 __END__

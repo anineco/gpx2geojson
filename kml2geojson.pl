@@ -13,68 +13,67 @@ use open ':utf8';
 use open ':std';
 use XML::Simple qw(:strict);
 use JSON;
-# include iconlut.pm
+# include iconlut.pm for customizing icon of waypoint
 use FindBin qw($Bin);
 use lib "$Bin";
-require iconlut; # customize icon for waypoint
+require iconlut;
 
 if (@ARGV == 0) {
   die "Usage: kml2geojson.pl kmlfiles\n";
 }
 
-sub dehtml {
-  my $s = shift; # description
-  $s =~ s%^<table><tr><td>%%;
-  $s =~ s%</td></tr></table>$%%;
-  $s =~ s%</td></tr><tr><td>%,%g;
-  $s =~ s%</td><td>%=%g;
-  return $s;
+sub set_properties {
+  my ($feature, $description) = @_;
+  if (!$description) { return; }
+  my ($comma, $equal) = (',', '=');
+  if ($description =~ s%^<table><tr><td>(.*)</td></tr></table>$%$1%) {
+    $comma = '</td></tr><tr><td>';
+    $equal = '</td><td>';
+  }
+  foreach (split /$comma/, $description) {
+    my ($key, $value) = split /$equal/;
+    $feature->{properties}->{$key} = $value;
+  }
 }
 
-sub pointFeature {
-  my ($p, $id, $style) = @_;
-  my $icon = substr($id, 1); # delete the first character 'N'
-  my ($lon,$lat,$alt) = split /,/, $p->{Point}->{coordinates};
-  my $q = {
+sub point_feature {
+  my ($placemark, $style, $id) = @_;
+  $id =~ m/^N([0-9]{6})$/;
+  my $icon = $1;
+  my ($lon,$lat,$alt) = split /,/, $placemark->{Point}->{coordinates};
+  my $feature = {
     type => 'Feature',
     properties => {
-      name => $p->{name},
+      name => $placemark->{name},
 #     _iconUrl => $style->{IconStyle}->{Icon}->{href},
-      _iconUrl => iconlut::iconUrl($icon),
+      _iconUrl => iconlut::iconUrl($icon), # NOTE: resetting based on iconlut.pm
       _iconSize => iconlut::iconSize($icon),
       _iconAnchor => iconlut::iconAnchor($icon)
     },
     geometry => {
       type => 'Point',
-      coordinates => []
+      coordinates => [0+$lon, 0+$lat]
     }
   };
-  @{$q->{geometry}->{coordinates}} = (0+$lon, 0+$lat);
-  my $cmt = dehtml($p->{description} || '');
-  if ($cmt) {
-    foreach my $kv (split /,/, $cmt) {
-      my ($k,$v) = split /=/, $kv;
-      $q->{properties}->{$k} = $v;
-    }
-  }
-  return $q;
+  set_properties($feature, $placemark->{description});
+  return $feature;
 }
 
-sub lineStringFeature {
-  my ($p, $id, $style) = @_;
+sub linestring_feature {
+  my ($placemark, $style) = @_;
   $style->{LineStyle}->{color} =~ /^(..)(..)(..)(..)$/;
   my $color = "#$4$3$2";
 # my $opacity = hex($1) / 255.0;
-  my $opacity = 0.5;
+  my $opacity = 0.5; # NOTE: set proper value
 # my $w = 0 + $style->{LineStyle}->{width};
-  my $w = 3;
-  my $q = {
+  my $w = 3; # NOTE: set proper value
+  my $feature = {
     type => 'Feature',
     properties => {
       _color => $color,
       _opacity => $opacity,
       _weight => $w,
-      _dashArray => "3,6",
+      _dashArray => "3,6" # NOTE: set proper value
     },
     geometry => {
       type => 'LineString',
@@ -82,32 +81,32 @@ sub lineStringFeature {
     }
   };
   my $i = 0;
-  foreach my $x (split /\n/, $p->{LineString}->{coordinates}) {
-    my ($lon,$lat,$alt) = split /,/, $x;
-    @{$q->{geometry}->{coordinates}[$i++]} = (0+$lon, 0+$lat);
+  foreach (split /\n/, $placemark->{LineString}->{coordinates}) {
+    my ($lon,$lat,$alt) = split /,/;
+    @{$feature->{geometry}->{coordinates}[$i++]} = (0+$lon, 0+$lat);
   }
-  return $q;
+  return $feature;
 }
 
 sub kml2geojson {
   my $kml = shift;
-  my $q = {
+  my $geojson = {
     type => 'FeatureCollection',
     features => []
   };
   my $n = 0;
   foreach my $folder (@{$kml->{Document}->{Folder}}) {
-    foreach my $p (@{$folder->{Placemark}}) {
-      my $id = substr($p->{styleUrl}, 1); # delete the first character '#'
+    foreach my $placemark (@{$folder->{Placemark}}) {
+      my $id = substr($placemark->{styleUrl}, 1); # delete first character '#'
       my $style = $kml->{Document}->{Style}->{$id};
-      if ($p->{Point}) {
-        $q->{features}[$n++] = pointFeature($p, $id, $style);
-      } elsif ($p->{LineString}) {
-        $q->{features}[$n++] = lineStringFeature($p, $id, $style);
+      if ($placemark->{Point}) {
+        $geojson->{features}[$n++] = point_feature($placemark, $style, $id);
+      } elsif ($placemark->{LineString}) {
+        $geojson->{features}[$n++] = linestring_feature($placemark, $style);
       }
     }
   }
-  return $q;
+  return $geojson;
 }
 
 my $parser = XML::Simple->new(
@@ -116,15 +115,14 @@ my $parser = XML::Simple->new(
 );
 my $serializer = JSON->new();
 
-foreach my $arg (@ARGV) {
-  my $kml = $parser->XMLin($arg);
+foreach my $file (@ARGV) {
+  my $kml = $parser->XMLin($file) or die "Can't parse $file: $!";
   my $geojson = kml2geojson($kml);
-  my $outfile = $arg;
-  $outfile =~ s/\.kml$/.geojson/;
-  print STDERR "$arg -> $outfile\n";
-  open(my $out, ">$outfile") or die "Can't open $outfile: $!";
+  (my $outfile = $file) =~ s/\.kml$/.geojson/;
+  print STDERR "$file -> $outfile\n";
+  open(my $out, '>', $outfile) or die "Can't open $outfile: $!";
   print $out $serializer->utf8(0)->encode($geojson), "\n";
   close($out);
 }
 
-# end of kml2geojson.pl
+__END__
