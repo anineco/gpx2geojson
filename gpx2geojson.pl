@@ -195,10 +195,8 @@ sub get_linestring_feature {
     my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
 
     # since system($cmd) opens annoying console window, call gpsbabel.exe directly
-    Win32::Process::Create(my $process,
-      'C:\Program Files (x86)\GPSBabel\gpsbabel.exe', # FIXME: hard-coded
-      $cmd, 0, CREATE_NO_WINDOW, '.'
-    );
+    my $exe = 'C:\Program Files (x86)\GPSBabel\gpsbabel.exe'; # FIXME: hard-coded
+    Win32::Process::Create(my $process, $exe, $cmd, 0, CREATE_NO_WINDOW, '.') or die "Can't execute $exe";
     $process->Wait(INFINITE);
 
     open(my $in, '<', $tmp2);
