@@ -331,7 +331,7 @@ $top->Button(
   -command => sub {
     my $ret = $top->getSaveFile(
       -filetypes => [['GeoJSONファイル', '.geojson'], ['すべて', '*']],
-      -initialdir => $param{outdir} ? $param{outdir} : $param{indir},
+      -initialdir => $param{outdir} || $param{indir},
       -initialfile => 'routemap.geojson',
       -defaultextension => '.geojson'
     );
@@ -354,11 +354,11 @@ $top->Spinbox(
 
 # 線種
 
-my $styles = [['GPX', 0], ['実線', 1], ['破線', 11], ['点線', 13]];
-
 my $f1 = $top->Frame(
   -borderwidth => 2, -relief => 'sunken'
 )->grid(-row => 7, -column => 1, -sticky => 'nsew');
+
+my $styles = [['GPX', 0], ['実線', 1], ['破線', 11], ['点線', 13]];
 
 foreach my $pair (@{$styles}) {
   $f1->Radiobutton(
@@ -370,11 +370,11 @@ foreach my $pair (@{$styles}) {
 
 # 線幅
 
-my $sizes =  [['GPX', 0], [' 1pt', 1], [' 3pt',  3], [' 5pt',  5]];
-
 my $f2 = $top->Frame(
   -borderwidth => 2, -relief => 'sunken'
 )->grid(-row => 8, -column => 1, -sticky => 'nsew');
+
+my $sizes =  [['GPX', 0], [' 1pt', 1], [' 3pt',  3], [' 5pt',  5]];
 
 foreach my $pair (@{$sizes}) {
   $f2->Radiobutton(
