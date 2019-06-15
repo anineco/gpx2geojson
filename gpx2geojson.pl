@@ -196,7 +196,7 @@ sub get_linestring_feature {
 
     # since system($cmd) opens annoying console window, call gpsbabel.exe directly
     my $exe = 'C:\Program Files (x86)\GPSBabel\gpsbabel.exe'; # FIXME: hard-coded
-    Win32::Process::Create(my $process, $exe, $cmd, 0, CREATE_NO_WINDOW, '.') or die "Can't execute $exe";
+    Win32::Process::Create(my $process, $exe, $cmd, 0, CREATE_NO_WINDOW, '.') or die "Can't execute $exe: $!";
     $process->Wait(INFINITE);
 
     open(my $in, '<', $tmp2);
