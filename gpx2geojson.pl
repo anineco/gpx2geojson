@@ -24,16 +24,16 @@ use File::Temp qw(:POSIX);
 use File::Spec;
 use IPC::Open2;
 use Tk;
-use constant OS_MSWIN => $^O eq 'MSWin32';
+use constant IS_WIN32 => $^O eq 'MSWin32';
 BEGIN {
-  if (OS_MSWIN) {
+  if (IS_WIN32) {
     require Win32::Process;
     Win32::Process->import();
   }
 }
 # include iconlut.pm for customizing icon of waypoint
-use FindBin qw($Bin);
-use lib "$Bin";
+use FindBin;
+use lib $FindBin::Bin;
 require iconlut;
 
 my $version = "0.9";
@@ -54,9 +54,9 @@ sub open_param {
   open(my $in, '<', $dotfile) or return;
   while (<$in>) {
     chomp;
-    my ($k, $v) = split '=';
-    if (exists($param{$k})) {
-      $param{$k} = $v;
+    my ($key, $value) = split '=';
+    if (exists($param{$key})) {
+      $param{$key} = $value;
     }
   }
   close($in);
@@ -186,7 +186,7 @@ sub get_linestring_feature {
   }
 
 # decimate track points in a segment using gpsbabel
-  if (OS_MSWIN) {
+  if (IS_WIN32) {
     my $tmp1 = tmpnam();
     my $tmp2 = tmpnam();
     open(my $out, '>', $tmp1);
