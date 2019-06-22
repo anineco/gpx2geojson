@@ -2,8 +2,7 @@
 
 body {
 	margin: 1em;
-	color: black;
-	font-family: 'メイリオ',Meiryo;
+	font-family: 'メイリオ', Meiryo, serif;
 }
 
 h1 {
@@ -77,9 +76,16 @@ td {
 	border: 1px solid #000;
 }
 
-a.extern:after {
-	margin-left: 3px;
+p a[href^="https:"]:after {
+	margin-left: 1px;
+	margin-right: 1px;
 	content: url(../image/external-link-green04-Shapes4FREE.png);
+}
+
+p a[href^="http:"]:after {
+	margin-left: 1px;
+	margin-right: 1px;
+	content: url(../image/external-link-red02-Shapes4FREE.png);
 }
 
 .routemap {
@@ -91,25 +97,20 @@ a.extern:after {
 	border-radius: .4em; /* Opera 10.5, IE 9, Saf4+, Chrome, FF4+ */
 }
 
-strong {
-	font-weight: bold;
-	color: red;
+pre, code, var, samp, kbd, .mono {
+	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+	font-size: 14px;
+	line-height: 1.2;
 }
 
 pre {
 	margin: 5pt;
 	padding: 5pt;
 	border: #ccf 1px solid;
-	font-family: Consolas;
-	font-size: small;
-	line-height: 140%;
 }
 
-code {
-	font-family: Consolas;
-}
-
-.mark {
+strong {
+	font-weight: bold;
 	color: red;
 }
 
@@ -120,26 +121,3 @@ var {
 address {
 	float: right;
 }
-
-.olFramedCloudPopupContent h2 {
-	background-color: #fff;
-}
-
-.olFramedCloudPopupContent td {
-	margin: 0;
-	padding: 0;
-	border: none;
-}
-
-.gm-style-iw td {
-	margin: 0;
-	padding: 0;
-	border: none;
-}
-
-.yolp-infowindow td {
-	margin: 0;
-	padding: 0;
-	border: none;
-}
-
