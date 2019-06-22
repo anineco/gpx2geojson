@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ルート地図</title>
 <link rel="stylesheet" href="v5.3.0-dist/ol.css">
-<link rel="stylesheet" href="https://unpkg.com/ol-layerswitcher@3.2.0/src/ol-layerswitcher.css">
 <style>
 body {
   margin: 0;
@@ -27,21 +26,6 @@ body {
   left: -50px;
   font-family: sans-serif;
   white-space: nowrap;
-}
-.ol-popup h2 {
-  margin: 0;
-  padding: 0 2em 0 0;
-  font-size: 12px;
-  font-weight: bold;
-  color: red;
-}
-.ol-popup td {
-  font-size: 12px;
-  padding: 0;
-}
-.ol-popup td:first-child {
-  padding-right: 1em;
-  color: blue;
 }
 .ol-popup:after, .ol-popup:before {
   top: 100%;
@@ -73,122 +57,180 @@ body {
 .ol-popup-closer:after {
   content: "✖";
 }
-.layer-switcher {
-  font-family: sans-serif;
+.ol-popup h2 {
+  margin: 0;
+  padding: 0 2em 0 0;
   font-size: 12px;
-  background-color: transparent;
+  font-weight: bold;
+  color: red;
 }
-.layer-switcher button {
-  background-color: transparent;
+.ol-popup td {
+  font-size: 12px;
+  padding: 0;
+}
+.ol-popup td:first-child {
+  padding-right: 1em;
+  color: blue;
+}
+#crosshair {
+  position: absolute;
+  top: calc(50% - 12px);
+  left: calc(50% - 12px);
+}
+#taskbar {
+  position: absolute;
+  top: .5em;
+  left: 2.75em;
+}
+#taskbar div {
+  margin: 1px;
+  border-radius: 2px;
+  padding: 1px .5em;
+  font-size: 9pt;
+  font-family: monospace;
+  color: white;
+  background-color: rgba(0,60,136,.5);
+}
+#taskbar input[type="button"], #taskbar select {
+  margin: 2px;
+  padding: 2px .3em;
+  border: none;
+  border-radius: 4px;
+  color: black;
+  background-color: white;
+}
+#taskbar option {
+  font-size: 9pt;
+  font-family: monospace;
+}
+#taskbar select:hover, #taskbar input:hover {
+  cursor: pointer;
+}
+@media screen and (max-width: 539px) {
+  .pc { display: none !important; }
+}
+@media print {
+  body { width: 259mm; height: 172mm; } /* A4 */
 }
 </style>
 </head>
 <body>
 <div id="map"></div>
+<!-- popup -->
 <div id="popup" class="ol-popup">
 <span id="popup-closer" class="ol-popup-closer"></span>
 <div id="popup-content"></div>
 </div>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script> // IE11
+<!-- crosshair -->
+<div id="crosshair"><img src="image/crosshair.png"></div>
+<!-- taskbar -->
+<div id="taskbar" class="ol-control">
+<div>
+ズーム<select id="tb-zoom"></select>
+マップ<select id="tb-layer">
+<option value="std" selected>標準</option>
+<option value="pale">淡色</option>
+<option value="ort">写真</option>
+<option value="osm">OSM</option>
+</select>
+<span class="pc">
+<input id="tb-track" type="checkbox" checked>GPSデータ
+<input id="tb-cross" type="checkbox" checked>中心十字線
+<input id="tb-center" type="button" value="中心座標">
+<input type="button" value="印刷" onclick="window.print()">
+<!--
+<input type="button" value="閉じる" onclick="window.close()">
+-->
+</span>
+</div>
+</div>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script><!-- IE11 -->
 <script src="v5.3.0-dist/ol.js"></script>
-<script src="https://unpkg.com/ol-layerswitcher@3.2.0"></script>
 <script>
-var param = {
+let param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml'
 };
-location.search.slice(1).split('&').forEach(function(ma) {
-  var s = ma.split('=');
-  param[s[0]] = decodeURIComponent(s[1]);
+location.search.slice(1).split('&').forEach(function (ma) {
+  let s = ma.split('=');
+  if (s[0] === 'url') {
+    param[s[0]] = decodeURIComponent(s[1]);
+  } else if (s[0] in param) {
+    param[s[0]] = Number(s[1]);
+  }
 });
-window.addEventListener('DOMContentLoaded', function() {
-  var std = new ol.layer.Tile({
-    title: '標準地図',
-    type: 'base',
-    visible: true,
+
+window.addEventListener('DOMContentLoaded', function () {
+  let std = new ol.layer.Tile({
     source: new ol.source.XYZ({
       attributions: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>',
       url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'
     })
   });
-  var pale = new ol.layer.Tile({
-    title: '淡色地図',
-    type: 'base',
+  let pale = new ol.layer.Tile({
     visible: false,
     source: new ol.source.XYZ({
       attributions: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>',
       url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'
     })
   });
-  var ort = new ol.layer.Tile({
-    title: '写真',
-    type: 'base',
+  let ort = new ol.layer.Tile({
     visible: false,
+/*
     source: new ol.source.XYZ({
       attributions: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>',
       url: 'https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg'
     })
-  });
-  var osm = new ol.layer.Tile({
-    title: 'OSM',
-    type: 'base',
-    visible: false,
-    source: new ol.source.XYZ({
-      attributions: ["&copy;", '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'],
-      url: 'https://tile.openstreetmap.jp/{z}/{x}/{y}.png'
+*/
+    source: new ol.source.BingMaps({
+      key: 'ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh',
+      imagerySet: 'Aerial'
     })
   });
-  var track = new ol.layer.Vector({
-    title: 'GPSデータ',
-    type: 'data',
-    visible: true,
+  let osm = new ol.layer.Tile({
+    visible: false,
+    source: new ol.source.XYZ({
+      attributions: '&copy; <a href=""http://osm.org/copyright>OpenStreetMap</a> contributors',
+      url: 'http://tile.openstreetmap.jp/{z}/{x}/{y}.png'
+    })
+  });
+  let track = new ol.layer.Vector({
     source: new ol.source.Vector({
       url: param.url,
       format: new ol.format.KML()
     })
   });
-  var overlay = new ol.Overlay({
+  let overlay = new ol.Overlay({
     element: document.getElementById('popup'),
     autoPan: true,
     autoPanAnimation: { duration: 250 }
   });
-  var view = new ol.View({
-    center: ol.proj.fromLonLat([Number(param.lon), Number(param.lat)]),
+  let view = new ol.View({
+    center: ol.proj.fromLonLat([param.lon, param.lat]),
     maxZoom: 18,
+    minZoom: 0,
     zoom: param.zoom
   });
-  var map = new ol.Map({
+  let map = new ol.Map({
     target: 'map',
     view: view,
-    layers: [
-      new ol.layer.Group({
-        title: 'ベースマップ',
-        layers: [std, pale, ort, osm]
-      }),
-      new ol.layer.Group({
-        title: 'オーバーレイ',
-        layers: [track]
-      })
-    ],
-    controls: ol.control.defaults({
-      attributionOptions: ({ collapsible: false })
-    }).extend([
-      new ol.control.ScaleLine(),
-      new ol.control.LayerSwitcher()
+    controls: ol.control.defaults().extend([
+      new ol.control.ScaleLine()
     ]),
+    layers: [std, pale, ort, osm, track],
     overlays: [overlay]
   });
 
-  var closer = document.getElementById('popup-closer');
-  closer.addEventListener('click', function() {
+  let closer = document.getElementById('popup-closer');
+  closer.addEventListener('click', function () {
     overlay.setPosition(undefined); closer.blur();
   }, false);
 
-  map.on('pointermove', function(evt) {
+  map.on('pointermove', function (evt) {
     if (evt.dragging) { return; }
-    var found = map.forEachFeatureAtPixel(
+    let found = map.forEachFeatureAtPixel(
       map.getEventPixel(evt.originalEvent),
-      function(feature, layer) {
+      function (feature, layer) {
         return feature.getGeometry().getType() === 'Point';
       }
     );
@@ -199,11 +241,11 @@ window.addEventListener('DOMContentLoaded', function() {
     return html = '<h2>' + feature.get('name') + '</h2>' + (feature.get('description') || '');
   }
 
-  var content = document.getElementById('popup-content');
-  map.on('click', function(evt) {
-    var found = map.forEachFeatureAtPixel(
+  let content = document.getElementById('popup-content');
+  map.on('click', function (evt) {
+    let found = map.forEachFeatureAtPixel(
       evt.pixel,
-      function(feature, layer) {
+      function (feature, layer) {
         if (feature.getGeometry().getType() !== 'Point') {
           return false;
         }
@@ -212,6 +254,46 @@ window.addEventListener('DOMContentLoaded', function() {
       }
     );
     overlay.setPosition(found ? evt.coordinate : undefined);
+  });
+
+  let sel = document.getElementById('tb-zoom');
+  let zmax = view.getMaxZoom();
+  let zmin = view.getMinZoom();
+  for (let i = 0; i <= zmax - zmin; i++) {
+    let z = zmax - i;
+    let opt = document.createElement('option');
+    opt.setAttribute('value', z);
+    sel.appendChild(opt).textContent = z;
+  }
+  sel.selectedIndex = zmax - param.zoom;
+  sel.addEventListener('change', function () {
+    view.setZoom(this.options[this.selectedIndex].value);
+  });
+  map.on('moveend', function () {
+    let i = zmax - view.getZoom();
+    if (sel.selectedIndex != i) {
+      sel.selectedIndex = i;
+    }
+  });
+
+  document.getElementById('tb-layer').addEventListener('change', function () {
+    let v = this.options[this.selectedIndex].value;
+    std.setVisible(v === 'std');
+    pale.setVisible(v === 'pale');
+    ort.setVisible(v === 'ort');
+    osm.setVisible(v === 'osm');
+  });
+
+  document.getElementById('tb-track').addEventListener('change', function () {
+    track.setVisible(this.checked);
+  });
+
+  document.getElementById('tb-cross').addEventListener('change', function () {
+    document.getElementById('crosshair').style.visibility = this.checked ? 'visible' : 'hidden';
+  });
+
+  document.getElementById('tb-center').addEventListener('click', function () {
+    alert(ol.coordinate.format(ol.proj.toLonLat(view.getCenter()), '緯度={y}\n経度={x}', 6));
   });
 });
 </script>

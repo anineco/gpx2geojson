@@ -20,22 +20,27 @@ body {
 <div id="map"></div>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxcuxvdd1SeIgtubznQ_JC7e08BZrIHkk&language=ja&region=JP"></script>
 <script>
-var param = {
+let param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml' // absolute URL
 };
-location.search.slice(1).split('&').forEach(function(ma) {
-  var s = ma.split('=');
-  param[s[0]] = decodeURIComponent(s[1]);
+location.search.slice(1).split('&').forEach(function (ma) {
+  let s = ma.split('=');
+  if (s[0] === 'url') {
+    param[s[0]] = decodeURIComponent(s[1]);
+  } else if (s[0] in param) {
+    param[s[0]] = Number(s[1]);
+  }
 });
-window.addEventListener('DOMContentLoaded', function() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: Number(param.zoom),
-    center: {lat: Number(param.lat), lng: Number(param.lon)},
+
+window.addEventListener('DOMContentLoaded', function () {
+  let map = new google.maps.Map(document.getElementById('map'), {
+    zoom: param.zoom,
+    center: { lat: param.lat, lng: param.lon },
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     scaleControl: true
   });
-  var track = new google.maps.KmlLayer(param.url, {
+  let track = new google.maps.KmlLayer(param.url, {
     preserveViewport: true
   });
   track.setMap(map);
