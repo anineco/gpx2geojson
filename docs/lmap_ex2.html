@@ -67,14 +67,14 @@ window.addEventListener('DOMContentLoaded', function () {
     zoom: param.zoom
   });
   let std = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>'
+    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
   }).addTo(map);
   let pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>'
+    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
   });
 /*
   let ort = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', {
-    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>'
+    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
   });
 */
   let ort = L.tileLayer.bing({
