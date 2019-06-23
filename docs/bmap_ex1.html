@@ -17,12 +17,12 @@ body {
 </style>
 <script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh" async defer></script>
 <script>
-let param = {
+const param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml'
 };
 location.search.slice(1).split('&').forEach(function (ma) {
-  let s = ma.split('=');
+  const s = ma.split('=');
   if (s[0] === 'url') {
     param[s[0]] = decodeURIComponent(s[1]);
   } else if (s[0] in param) {
@@ -31,12 +31,12 @@ location.search.slice(1).split('&').forEach(function (ma) {
 });
 
 function GetMap() {
-  let map = new Microsoft.Maps.Map('#map', {
+  const map = new Microsoft.Maps.Map('#map', {
     center: new Microsoft.Maps.Location(param.lat, param.lon),
     zoom: param.zoom
   });
   Microsoft.Maps.loadModule('Microsoft.Maps.GeoXml', function () {
-    let track = new Microsoft.Maps.GeoXmlLayer(param.url, null, { autoUpdateMapView: false });
+    const track = new Microsoft.Maps.GeoXmlLayer(param.url, null, { autoUpdateMapView: false });
     map.layers.insert(track);
   });
 }

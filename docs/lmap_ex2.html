@@ -48,12 +48,12 @@ body {
   crossorigin=""></script>
 <script src="js/leaflet-bing-layer.min.js"></script>
 <script>
-let param = {
+const param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.geojson'
 };
 location.search.slice(1).split('&').forEach(function (ma) {
-  let s = ma.split('=');
+  const s = ma.split('=');
   if (s[0] === 'url') {
     param[s[0]] = decodeURIComponent(s[1]);
   } else if (s[0] in param) {
@@ -62,34 +62,34 @@ location.search.slice(1).split('&').forEach(function (ma) {
 });
 
 window.addEventListener('DOMContentLoaded', function () {
-  let map = L.map('map', {
+  const map = L.map('map', {
     center: [param.lat, param.lon],
     zoom: param.zoom
   });
-  let std = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+  const std = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
     attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
   }).addTo(map);
-  let pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+  const pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
     attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
   });
 /*
-  let ort = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', {
+  const ort = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', {
     attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
   });
 */
-  let ort = L.tileLayer.bing({
+  const ort = L.tileLayer.bing({
     bingMapsKey: 'ApSrHyswQlSkhiwqypJU_HidSkz0pWKYg7mpCYwpR1oja2ai3CHxJOHpa2LB5NNh',
     imagerySet: 'Aerial',
     attribution: '&copy; 2019 DigitalGlobe, &copy; 2019 Zenrin, &copy; 2019 Microsoft Corporation <a href="https://www.microsoft.com/maps/assets/docs/terms.aspx">Terms</a>'
   });
-  let osm = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png', {
+  const osm = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   });
 
-  let xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.addEventListener('loadend', function (e) {
     if (this.status !== 200) { return; }
-    let track = L.geoJSON(JSON.parse(this.responseText), { // IE11
+    const track = L.geoJSON(JSON.parse(this.responseText), { // IE11
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
@@ -113,9 +113,9 @@ window.addEventListener('DOMContentLoaded', function () {
         };
       }
     }).bindPopup(function (layer) {
-      let properties = layer.feature.properties;
+      const properties = layer.feature.properties;
       let html = '<h2>' + properties.name + '</h2>';
-      let keys = Object.keys(properties).filter(function (key) { // IE11
+      const keys = Object.keys(properties).filter(function (key) { // IE11
         return key !== 'geometry' && key !== 'name' && key.charAt(0) !== '_';
       });
       if (keys.length > 0) {

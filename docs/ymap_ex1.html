@@ -27,12 +27,12 @@ body {
 <div id="map"></div>
 <script src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPWR0cjBWa012YVBQNiZzPWNvbnN1bWVyc2VjcmV0Jng9ZDU-"></script>
 <script>
-let param = {
+const param = {
   lon: 138.723460, lat: 35.931374, zoom: 14,
   url: 'https://anineco.github.io/gpx2geojson/example/routemap.min.kml' // absolute URL
 };
 location.search.slice(1).split('&').forEach(function (ma) {
-  let s = ma.split('=');
+  const s = ma.split('=');
   if (s[0] === 'url') {
     param[s[0]] = decodeURIComponent(s[1]);
   } else if (s[0] in param) {
@@ -41,18 +41,18 @@ location.search.slice(1).split('&').forEach(function (ma) {
 });
 
 window.addEventListener('DOMContentLoaded', function () {
-  let map = new Y.Map('map');
+  const map = new Y.Map('map');
   map.setConfigure('scrollWheelZoom', true);
   map.setConfigure('enableOpenStreetMap', true);
   map.removeLayerSet(Y.LayerSetId.B1); // 地下街
-  let topographicLayerSet = new Y.LayerSet('地形図', [new Y.StyleMapLayer('topographic')]);
+  const topographicLayerSet = new Y.LayerSet('地形図', [new Y.StyleMapLayer('topographic')]);
   map.addLayerSet('MyTopographicLayerSet', topographicLayerSet);
   map.addControl(new Y.LayerSetControl());
   map.addControl(new Y.ZoomControl());
 //  map.addControl(new Y.SliderZoomControlVertical());
   map.addControl(new Y.ScaleControl());
   map.drawMap(new Y.LatLng(param.lat, param.lon), param.zoom, 'MyTopographicLayerSet');
-  let layer = new Y.GeoXmlLayer(param.url);
+  const layer = new Y.GeoXmlLayer(param.url);
   map.addLayer(layer);
   layer.execute();
 });
