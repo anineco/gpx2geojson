@@ -52,9 +52,9 @@ window.addEventListener('DOMContentLoaded', function () {
 //  map.addControl(new Y.SliderZoomControlVertical());
   map.addControl(new Y.ScaleControl());
   map.drawMap(new Y.LatLng(my_param.lat, my_param.lon), my_param.zoom, 'MyTopographicLayerSet');
-  const layer = new Y.GeoXmlLayer(my_param.url);
-  map.addLayer(layer);
-  layer.execute();
+  const track = new Y.GeoXmlLayer(my_param.url);
+  map.addLayer(track);
+  track.execute();
 });
 </script>
 </body>

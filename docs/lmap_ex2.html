@@ -42,11 +42,12 @@ body {
 </head>
 <body>
 <div id="map"></div>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script><!-- IE11 -->
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>
-<script src="js/leaflet-bing-layer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-bing-layer@3.3.1/leaflet-bing-layer.min.js"
+  integrity="sha256-WHBwQhbzjOM8oUYBk983WdI+159mgW5jmWkmux0/Iw0=" crossorigin="anonymous"></script>
 <script>
 const param = {
   lon: 138.723460, lat: 35.931374, zoom: 13,
@@ -87,9 +88,11 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   const xhr = new XMLHttpRequest();
+  xhr.open('GET', param.url);
+  xhr.responseType = 'text'; // NOTE: 'json' does not work in IE11
   xhr.addEventListener('loadend', function (e) {
     if (this.status !== 200) { return; }
-    const track = L.geoJSON(JSON.parse(this.responseText), { // IE11
+    const track = L.geoJSON(JSON.parse(this.response), {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
@@ -115,13 +118,13 @@ window.addEventListener('DOMContentLoaded', function () {
     }).bindPopup(function (layer) {
       const properties = layer.feature.properties;
       let html = '<h2>' + properties.name + '</h2>';
-      const keys = Object.keys(properties).filter(function (key) { // IE11
+      const keys = Object.keys(properties).filter(function (key) { // NOTE: '=>' does not work in IE11
         return key !== 'geometry' && key !== 'name' && key.charAt(0) !== '_';
       });
       if (keys.length > 0) {
-        html += '<table><tbody>' + keys.map(function (key) { // IE11
-          return '<tr><td>' + key + '</td><td>' + properties[key] + '</td></tr>';
-        }) + '</tbody></table>';
+        html += '<table><tbody><tr><td>' + keys.map(function (key) { // NOTE: '=>' does not work in IE11
+          return key + '</td><td>' + properties[key];
+        }).join('</td></tr><tr><td>') + '</td></tr></tbody></table>';
       }
       return html;
     }).addTo(map);
@@ -130,7 +133,6 @@ window.addEventListener('DOMContentLoaded', function () {
       { 'GPSデータ': track }
     ).addTo(map);
   });
-  xhr.open('GET', param.url);
   xhr.send();
 
   L.control.scale({ imperial: false, metric: true }).addTo(map);

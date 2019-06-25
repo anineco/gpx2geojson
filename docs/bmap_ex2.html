@@ -33,9 +33,9 @@ location.search.slice(1).split('&').forEach(function (ma) {
 function GetMap() {
   const map = new Microsoft.Maps.Map('#map', {
     center: new Microsoft.Maps.Location(param.lat, param.lon),
-    zoom: param.zoom
+    zoom: param.zoom,
+    navigationBarMode: Microsoft.Maps.NavigationBarMode.compact
   });
-
   const track = new Microsoft.Maps.Layer();
   map.layers.insert(track);
   Microsoft.Maps.loadModule('Microsoft.Maps.GeoJson', function () {
@@ -49,14 +49,14 @@ function GetMap() {
             title: shape.metadata.name
           });
         } else if (shape instanceof Microsoft.Maps.Polyline) {
-          const c = shape.metadata._color.match(/^#(..)(..)(..)$/).slice(1).map(function (h) { // IE11
+          const c = shape.metadata._color.match(/^#(..)(..)(..)$/).slice(1).map(function (h) { // NOTE: '=>' does not work in IE11
             return parseInt(h, 16);
           });
           c[3] = Math.round(255 * shape.metadata._opacity);
           shape.setOptions({
             strokeThickness: shape.metadata._weight,
             strokeColor: new Microsoft.Maps.Color(c[3], c[0], c[1], c[2]),
-            strokeDashArray: shape.metadata._dashArray.split(',').map(function (v) { // IE11
+            strokeDashArray: shape.metadata._dashArray.split(',').map(function (v) { // NOTE: '=>' does not work in IE11
               return v / shape.metadata._weight;
             })
           });
@@ -73,14 +73,14 @@ function GetMap() {
   Microsoft.Maps.Events.addHandler(track, 'click', function (event) {
     const shape = event.target;
     if (shape instanceof Microsoft.Maps.Pushpin) {
-      const keys = Object.keys(shape.metadata).filter(function (key) { // IE11
+      const keys = Object.keys(shape.metadata).filter(function (key) { // NOTE: '=>' does not work in IE11
         return key !== 'name' && key.charAt(0) !== '_';
       });
       let html = undefined;
       if (keys.length > 0) {
-        html = '<table><tbody>' + keys.map(function (key) { // IE11
-          return '<tr><td>' + key + '</td><td>' + shape.metadata[key] + '</td></tr>';
-        }) + '</tbody></table>';
+        html = '<table><tbody><tr><td>' + keys.map(function (key) { // NOTE: '=>' does not work in IE11
+          return key + '</td><td>' + shape.metadata[key];
+        }).join('</td></tr><tr><td>') + '</td></tr></tbody></table>';
       }
       popup._options.description = undefined; // NOTE: initialize 'description'
       popup.setOptions({
