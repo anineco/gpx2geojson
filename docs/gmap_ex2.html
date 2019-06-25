@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', function () {
   const map = new google.maps.Map(document.getElementById('map'), {
     zoom: param.zoom,
     center: { lat: param.lat, lng: param.lon },
-    mapTypeId: google.maps.MapTypeId.TERRAIN,
+    mapTypeId: 'terrain',
     scaleControl: true
   });
   map.data.loadGeoJson(param.url);
