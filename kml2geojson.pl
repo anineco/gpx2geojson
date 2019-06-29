@@ -14,8 +14,8 @@ use open ':std';
 use XML::Simple qw(:strict);
 use JSON;
 # include iconlut.pm for customizing icon of waypoint
-use FindBin qw($Bin);
-use lib "$Bin";
+use FindBin;
+use lib $FindBin::Bin;
 require iconlut;
 
 if (@ARGV == 0) {
@@ -46,7 +46,7 @@ sub point_feature {
     properties => {
       name => $placemark->{name},
 #     _iconUrl => $style->{IconStyle}->{Icon}->{href},
-      _iconUrl => iconlut::iconUrl($icon), # NOTE: resetting based on iconlut.pm
+      _iconUrl => iconlut::iconUrl($icon), # NOTE: reset based on iconlut.pm
       _iconSize => iconlut::iconSize($icon),
       _iconAnchor => iconlut::iconAnchor($icon)
     },
