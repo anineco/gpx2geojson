@@ -3,20 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>GPX2GeoJSON（GPX→GeoJSONコンバータ）</title>
-<link rel="stylesheet" href="common.css" type="text/css">
+<link rel='stylesheet' href='../gps-track-maps/common.css'>
 </head>
 <body>
 <div class="menu">
 <ul>
-<li><a href="https://anineco.nyanta.jp/">電脳覚書</a> &gt;</li>
-<li><a href="../gps-track-maps/">TOP</a> &gt;</li>
+<li><a href="https://anineco.nyanta.jp/">電脳覚書</a> |</li>
+<li><a href="https://anineco.nyanta.jp/bbs/">掲示板</a> &gt;</li>
+<li><a href="https://github.com/anineco/">GitHub</a> |</li>
+<li><a href="../gps-track-maps/">TOP &gt;</li>
 <li>GPX2GeoJSON |</li>
-<li><a href="../gps-track-maps/setup.html">ルート地図の設置方法</a></li>
+<li><a href="setup.html">設置方法（共通）</a> |</li>
+<li><a href="omap.html">OpenLayers</a> |</li>
+<li><a href="lmap.html">Leaflet</a> |</li>
+<li><a href="gmap.html">Google</a> |</li>
+<li><a href="bmap.html">Bing</a></li>
 </ul>
 </div><!-- end menu -->
 <h1>GPX2GeoJSON（GPX→GeoJSONコンバータ）</h1>
 <ul>
-<li>更新情報（2019-06-15）：GPX2GeoJSONを公開。
+<li>更新情報（2019-07-07）：GPX2GeoJSONを公開。
 <img src="image/new.gif" alt="NEW" height="11" width="20"></li>
 <li>このサイトに関するご意見・ご質問・ご要望は、<a href="http://anineco.nyanta.jp/bbs/">サポート掲示板</a>へお願いします。</li>
 </ul>
@@ -43,16 +49,20 @@
 <div style="float:right;text-align:center;font-size:small;padding:5px;margin:5px;border:dashed 2px gray;background:white;"><img src="image/github.png" width="215" height="115"><br>図1 GitHubダウンロード画面</div>
 <p>まず、GitHubからGPX2GeoJSONの最新版をダウンロードします。<a href="https://github.com/anineco/gpx2geojson">https://github.com/anineco/gpx2geojson</a>にアクセスするとGPX2GeoJSONのリポジトリ画面が開きます。<span style="font-size:small;background:green;color:white;padding:2px;border-radius:2px;">Clone or download</span>をクリックすると図1の小窓が開き、続いて<span style="color:blue;">Download ZIP</span>をクリックするとダウンロードが始まります。</p>
 <p>ダウンロードしたZIPファイルを適当なフォルダの下で展開すると、下記のファイル（2019-06-15現在）が配置されます。このうち、実行に必要なファイルは赤字で示したgpx2geojson.exeとiconlut.pmの2つです。この2つのファイルはどこに置いても動作しますが、常に同じフォルダ内に配置する必要があります。</p>
-<pre><table>
-<tr><td>README.md</td><td></td></tr>
-<tr><td>docs/*</td><td>… <a href="https://anineco.github.io/gpx2geojson/">GitHub Pages</a></td></tr>
-<tr><td><span style="color:red;">gpx2geojson.exe</span></td><td>… GPX→GeoJSONコンバータ（実行形式ファイル）</td></tr>
-<tr><td>gpx2geojson.pl</td><td>… GPX→GeoJSONコンバータ（Perlスクリプト）</td></tr>
-<tr><td><span style="color:red;">iconlut.pm</span></td><td>… アイコン変換表</td></tr>
-<tr><td>iconlut_anineco.pm</td><td>… アイコン変換表（あにねこ登山日誌）</td></tr>
-<tr><td>kml2geojson.pl</td><td>… KML→GeoJSONコンバータ（Perlスクリプト）</td></tr>
-<tr><td>pl2exe.cmd</td><td>… gpx2geojson.plをgpx2geojson.exeにパッケージ化するバッチファイル</td></tr>
-</table></pre>
+<div class="src">
+<div>ディレクトリ構成図</div>
+<pre>
+gpx2geojson
+├── <b>gpx2geojson.exe</b> （実行形式ファイル）
+├── <b>iconlut.pm</b> （アイコン変換表）
+├── iconlut_anineco.pm（アイコン変換表：あにねこ登山日誌）
+├── docs/*            （GitHub Pages）
+├── gpx2geojson.pl    （Perlスクリプト）
+├── pl2exe.cmd        （EXE化バッチファイル）
+├── kml2geojson.pl    （KML→GeoJSONコンバータ）
+└── example/*         （サンプルデータ）
+</pre>
+</div><!-- .src -->
 <p>GPSBabelは、公式ウェブサイト<a href="https://www.gpsbabel.org/">https://www.gpsbabel.org/</a>からWindows用（2019-06-15現在、GPSBabel-1.6.0-Setup-exe）をダウンロードしてインストールして下さい。インストール先は通常<code>'C:\Program Files (x86)\GPSBabel'</code>で、GPX2GeoJSONはここに外部プログラム<code>gpsbabel.exe</code>があることを前提として動作します。</p>
 <h3>アンインストール</h3>
 <p>GPX2GeoJSONのアンインストールは、展開したフォルダをまるごと削除して下さい。GPX2GeoJSONを一度起動して終了すると、ホームフォルダ直下に.gpx2geojsonというファイルが作成されます。アンインストールの際には、このファイルも削除して差し支えありません。</p>
@@ -76,8 +86,10 @@
 <p>カシミール3Dの「ウェイポイント/ルートポイントのプロパティ」（図4）の設定項目が、地理院地図でどのように表示されるかを説明します。</p>
 <p style="text-align:center;"><img src="image/wptprop.png" alt="図4" height="343" width="403"><br>図4 ウェイポイント/ルートポイントのプロパティ</p>
 <ul>
-  <li><b>アイコン</b>：カシミール3Dで指定したアイコンは、GPX形式の中では「コード番号」で記録されます。GPX2GeoJSONはiconlut.pmの設定に基づいて、コード番号を対応するシンボル画像のURLに変換します。配布しているiconlut.pmの内容は簡単なPerlスクリプトで、次のようなものです。
-<pre><code>package iconlut;
+  <li><strong>アイコン</strong>：カシミール3Dで指定したアイコンは、GPX形式の中では「コード番号」で記録されます。GPX2GeoJSONはiconlut.pmの設定に基づいて、コード番号を対応するシンボル画像のURLに変換します。配布しているiconlut.pmの内容は簡単なPerlスクリプトで、次のようなものです。
+<div class="src">
+<div>iconlut.pm</div>
+<pre>package iconlut;
 use strict;
 use warnings;
 sub iconUrl {
@@ -93,31 +105,32 @@ sub iconAnchor {
   return [12, 12];
 }
 1;
-</code></pre>
-この設定では、https://map.jpn.org/に設置済のシンボル画像のセットにアクセスします。この画像セットは、カシミール3Dのアイコンの全てに対応しています。</li>
-  <li><b>名前</b>、<b>GPSでの備考</b>：地理院地図において、シンボル（点型データ）にマウスポインタを重ねると、ポップアップ窓で表示されます。GPSでの備考にはシンボルの属性情報を「項目名1=値1,項目名2=値2,…」のように項目名と値を「=」（イコール）で接続し、カンマ区切りで列挙して記述します。</li>
+</pre>
+</div><!-- .src -->
+この設定では、<code>https://map.jpn.org/</code>に設置済のシンボル画像のセットにアクセスします。この画像セットは、カシミール3Dのアイコンの全てに対応しています。</li>
+  <li><strong>名前</strong>、<strong>GPSでの備考</strong>：地理院地図において、シンボル（点型データ）にマウスポインタを重ねると、ポップアップ窓で表示されます。GPSでの備考にはシンボルの属性情報を「項目名1=値1,項目名2=値2,…」のように項目名と値を「=」（イコール）で接続し、カンマ区切りで列挙して記述します。</li>
 </ul>
 <h3>ルート</h3>
 <p>カシミール3Dの「ルートデータプロパティ」（図5）の設定項目が、地理院地図でどのように表示されるかを説明します。</p>
 <p style="text-align:center;"><img src="image/rteprop.png" alt="図5" height="232" width="455"><br>図5 ルートデータプロパティ</p>
 <ul>
-  <li><b>表示色</b>：カシミール3Dで指定した色で表示されます。透過率はGPX2GeoJSONで変換する際に指定します。</li>
-  <li><b>線幅</b>：カシミール3Dで指定した幅（1〜9）を地図上の幅（単位はピクセル）として表示します。地図の縮尺を変えても線幅は変化しません。</li>
-  <li><b>線種</b>：カシミール3Dで指定した種類のうち、実線、短長の破線、点線、一点鎖線、二点鎖線が表示可能です。</li>
+<li><strong>表示色</strong>：カシミール3Dで指定した色で表示されます。透過率はGPX2GeoJSONで変換する際に指定します。</li>
+<li><strong>線幅</strong>：カシミール3Dで指定した幅（1〜9）を地図上の幅（単位はピクセル）として表示します。地図の縮尺を変えても線幅は変化しません。</li>
+<li><strong>線種</strong>：カシミール3Dで指定した種類のうち、実線、短長の破線、点線、一点鎖線、二点鎖線が表示可能です。</li>
 </ul>
 <p>カシミール3Dでは、ルート上の各ポイントに対しても図4の「ウェイポイントのプロパティ」を開いて、全く同様のプロパティを設定することができます。ルートポイントもウェイポイントと同様にGeoJSON形式に変換されました。ただし、アイコンが「地名」グループの「なし」（コード番号903001）のルートポイントは例外で、変換されません（「なし」アイコンのウェイポイントは変換されます）。ルートポイントを変換したくない場合は、アイコンを「なし」に設定して下さい。複数のルートポイントを選択してから「ウェイポイントのプロパティ」を開くと、アイコンの一括変更が可能です。</p>
 <h3>トラック</h3>
 <p>カシミール3Dの「トラックデータプロパティ」（図6）の設定項目が、地理院地図でどのように表示されるかを説明します。</p>
 <p style="text-align:center;"><img src="image/trkprop.png" alt="図6" height="235" width="494"><br>図6 トラックデータプロパティ</p>
 <ul>
-  <li><b>表示色</b>、<b>線幅</b>、<b>線種</b>：ルートの場合と同様です。</li>
-  <li><b>アイコン</b>：トラックデータに指定したアイコンは変換対象外です。</li>
+<li><strong>表示色</strong>、<strong>線幅</strong>、<strong>線種</strong>：ルートの場合と同様です。</li>
+<li><strong>アイコン</strong>：トラックデータに指定したアイコンは変換対象外です。</li>
 </ul>
 <h2><a name="history">更新履歴</a></h2>
 <table class="base">
   <tbody>
     <tr>
-      <td valign="top" class="nowrap;">2019-06-22</td>
+      <td valign="top" class="nowrap;">2019-07-07</td>
       <td valign="top">GPX2GeoJSON Ver.0.9 公開。</td>
     </tr>
   </tbody>
