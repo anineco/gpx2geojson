@@ -36,3 +36,4 @@ inc/
 
 # added by anineco
 *.exe
+.DS_Store

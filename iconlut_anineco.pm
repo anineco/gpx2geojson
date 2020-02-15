@@ -120,7 +120,7 @@ my %iconlut = (
 );
 sub iconUrl {
   my $icon = shift;
-  return "https://anineco.org/symbols/$iconlut{$icon}.png";
+  return "symbols/$iconlut{$icon}.png";
 }
 sub iconSize {
   my $icon = shift;
