@@ -251,7 +251,7 @@ open_param();
 if (@ARGV > 0) {
   my $gpx = read_gpxfiles(@ARGV);
   my $geojson = gpx2geojson($gpx);
-  print JSON->new->utf8(0)->encode($geojson);
+  print JSON->new->utf8(0)->encode($geojson), "\n";
   exit;
 }
 
