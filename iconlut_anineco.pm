@@ -1,6 +1,7 @@
-package iconlut;
+package IconLut;
 use strict;
 use warnings;
+use utf8;
 my %iconlut = (
 951001 => 'Flag_Blue',
 951002 => 'Flag_Green',
@@ -118,15 +119,15 @@ my %iconlut = (
 956027 => 'Stadium',
 956028 => 'Zoo'
 );
-sub iconUrl {
+sub IconUrl {
   my $icon = shift;
-  return "symbols/$iconlut{$icon}.png";
+  return 'symbols/' . $iconlut{$icon} . '.png';
 }
-sub iconSize {
+sub IconSize {
   my $icon = shift;
   return [24, 24];
 }
-sub iconAnchor {
+sub IconAnchor {
   my $icon = shift;
   return [12, 12];
 }

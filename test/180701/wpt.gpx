@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx
+version="1.1"
+creator="Kashmir3D 9.310 - http://www.kashmir3d.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:kashmir3d="http://www.kashmir3d.com/namespace/kashmir3d"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd
+	http://www.kashmir3d.com/namespace/kashmir3d http://www.kashmir3d.com/namespace/kashmir3d.xsd">
+<wpt lat="36.083228" lon="138.291831">
+ <ele>1657.930000</ele>
+ <time>2018-07-01T08:09:02Z</time>
+ <name>竜源橋登山口</name>
+ <cmt>駐車=5台</cmt>
+ <sym>Parking Area</sym>
+ <extensions>
+ <kashmir3d:icon>954025</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.095967" lon="138.321833">
+ <ele>2059.280000</ele>
+ <time>2018-07-01T06:28:47Z</time>
+ <name>亀甲池</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Blue</sym>
+ <extensions>
+ <kashmir3d:icon>951004</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.111336" lon="138.304883">
+ <ele>2385.650000</ele>
+ <time>2018-06-30T23:41:47Z</time>
+ <name>佐久市最高地点</name>
+ <cmt>標高=2380m</cmt>
+ <sym>Summit</sym>
+ <extensions>
+ <kashmir3d:icon>952015</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.107319" lon="138.298472">
+ <ele>2369.790000</ele>
+ <time>2018-06-30T23:21:32Z</time>
+ <name>将軍平</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.097867" lon="138.308817">
+ <ele>1967.960000</ele>
+ <time>2018-07-01T07:06:47Z</time>
+ <name>将軍平分岐</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.107083" lon="138.327808">
+ <ele>2226.550000</ele>
+ <time>2018-07-01T01:10:32Z</time>
+ <name>石祠</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.110933" lon="138.301733">
+ <ele>2385.650000</ele>
+ <time>2018-06-30T23:33:47Z</time>
+ <name>赤谷分岐</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.108231" lon="138.325786">
+ <ele>2229.920000</ele>
+ <time>2018-07-01T01:03:02Z</time>
+ <name>双子山</name>
+ <cmt>標高=2224m</cmt>
+ <sym>Summit</sym>
+ <extensions>
+ <kashmir3d:icon>952015</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.099828" lon="138.331203">
+ <ele>2050.150000</ele>
+ <time>2018-07-01T02:16:32Z</time>
+ <name>双子池</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Blue</sym>
+ <extensions>
+ <kashmir3d:icon>951004</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.112361" lon="138.319625">
+ <ele>2101.580000</ele>
+ <time>2018-07-01T00:36:47Z</time>
+ <name>大河原峠</name>
+ <cmt>標高=2090m</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.090983" lon="138.330400">
+ <ele>2386.610000</ele>
+ <time>2018-07-01T03:57:32Z</time>
+ <name>大岳</name>
+ <cmt>標高=2382m</cmt>
+ <sym>Summit</sym>
+ <extensions>
+ <kashmir3d:icon>952015</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.091872" lon="138.329497">
+ <ele>2353.930000</ele>
+ <time>2018-07-01T03:48:47Z</time>
+ <name>大岳分岐</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.096700" lon="138.327322">
+ <ele>2190.020000</ele>
+ <time>2018-07-01T02:55:47Z</time>
+ <name>天狗の露地</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.099617" lon="138.313211">
+ <ele>1981.410000</ele>
+ <time>2018-07-01T06:57:02Z</time>
+ <name>天祥寺原</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.087467" lon="138.320078">
+ <ele>2481.300000</ele>
+ <time>2018-07-01T05:13:17Z</time>
+ <name>北横岳</name>
+ <cmt>標高=2480m</cmt>
+ <sym>Summit</sym>
+ <extensions>
+ <kashmir3d:icon>952015</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.084192" lon="138.281075">
+ <ele>1742.050000</ele>
+ <time>2018-07-01T08:27:17Z</time>
+ <name>蓼科山登山口</name>
+ <cmt>　=　</cmt>
+ <sym>Pin, Green</sym>
+ <extensions>
+ <kashmir3d:icon>951005</kashmir3d:icon>
+ </extensions>
+</wpt>
+<wpt lat="36.085053" lon="138.280719">
+ <ele>1739.640000</ele>
+ <time>2018-07-01T08:30:14Z</time>
+ <name>蓼科山登山口駐車場</name>
+ <cmt>駐車=30台</cmt>
+ <sym>Parking Area</sym>
+ <extensions>
+ <kashmir3d:icon>954025</kashmir3d:icon>
+ </extensions>
+</wpt>
+</gpx>

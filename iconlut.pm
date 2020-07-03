@@ -1,15 +1,16 @@
-package iconlut;
+package IconLut;
 use strict;
 use warnings;
-sub iconUrl {
+use utf8;
+sub IconUrl {
   my $icon = shift; # kashmir3d:icon
-  return "https://map.jpn.org/icon/$icon.png";
+  return 'https://map.jpn.org/icon/' . $icon . '.png';
 }
-sub iconSize {
+sub IconSize {
   my $icon = shift; # kashmir3d:icon
   return [24, 24];
 }
-sub iconAnchor {
+sub IconAnchor {
   my $icon = shift; # kashmir3d:icon
   return [12, 12];
 }

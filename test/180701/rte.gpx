@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx
+version="1.1"
+creator="Kashmir3D 9.310 - http://www.kashmir3d.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:kashmir3d="http://www.kashmir3d.com/namespace/kashmir3d"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd
+	http://www.kashmir3d.com/namespace/kashmir3d http://www.kashmir3d.com/namespace/kashmir3d.xsd">
+<rte>
+ <name>蓼科山</name>
+ <number>1</number>
+ <extensions>
+ <kashmir3d:line_color>000080</kashmir3d:line_color>
+ <kashmir3d:line_size>2</kashmir3d:line_size>
+ <kashmir3d:line_style>15</kashmir3d:line_style>
+ </extensions>
+<rtept lat="36.085073" lon="138.280723">
+ <ele>1741.570000</ele>
+ <time>2018-07-01T20:21:56Z</time>
+ <name>No. 2196</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.084800" lon="138.280558">
+ <ele>-1.000000</ele>
+ <time>2018-07-01T20:22:06Z</time>
+ <name>No. 2191</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.084216" lon="138.280944">
+ <ele>-1.000000</ele>
+ <time>2018-07-01T20:22:16Z</time>
+ <name>No. 2188</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.084903" lon="138.281202">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:22:26Z</time>
+ <name>AM0004</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.085280" lon="138.281846">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:22:36Z</time>
+ <name>AM0005</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.085486" lon="138.282961">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:22:46Z</time>
+ <name>AM0006</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.085692" lon="138.283863">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:22:56Z</time>
+ <name>AM0007</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.085830" lon="138.284807">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:23:06Z</time>
+ <name>AM0008</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.085967" lon="138.285365">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:23:16Z</time>
+ <name>AM0009</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.086722" lon="138.285407">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:23:26Z</time>
+ <name>AM0010</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.087272" lon="138.285193">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:23:36Z</time>
+ <name>AM0011</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.087787" lon="138.284892">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:23:46Z</time>
+ <name>AM0012</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.088817" lon="138.285365">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:23:56Z</time>
+ <name>AM0013</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.089641" lon="138.285450">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:24:06Z</time>
+ <name>AM0014</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.090018" lon="138.285794">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:24:16Z</time>
+ <name>AM0015</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.090259" lon="138.286137">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:24:26Z</time>
+ <name>AM0016</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.090293" lon="138.287081">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:24:36Z</time>
+ <name>AM0017</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.090533" lon="138.287467">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:24:46Z</time>
+ <name>AM0018</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.091185" lon="138.287768">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:24:56Z</time>
+ <name>AM0019</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.091494" lon="138.288240">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:25:06Z</time>
+ <name>AM0020</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.092215" lon="138.289184">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:25:16Z</time>
+ <name>AM0021</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.092971" lon="138.289871">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:25:26Z</time>
+ <name>AM0022</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.093725" lon="138.290858">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:25:36Z</time>
+ <name>2114m三角点</name>
+ <cmt>　=　</cmt>
+ <sym>Summit</sym>
+ <extensions>
+ <kashmir3d:icon>952015</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.094344" lon="138.290815">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:25:46Z</time>
+ <name>AM0024</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.095374" lon="138.290514">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:25:56Z</time>
+ <name>AM0025</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.095752" lon="138.290386">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:26:06Z</time>
+ <name>AM0026</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.096953" lon="138.290686">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:26:16Z</time>
+ <name>AM0027</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.097743" lon="138.290944">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:26:26Z</time>
+ <name>AM0028</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.098086" lon="138.291501">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:26:36Z</time>
+ <name>AM0029</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.098327" lon="138.291673">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:26:46Z</time>
+ <name>AM0030</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.098636" lon="138.291888">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:26:56Z</time>
+ <name>AM0031</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.099151" lon="138.292059">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:27:06Z</time>
+ <name>AM0032</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.099597" lon="138.292360">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:27:16Z</time>
+ <name>AM0033</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.099975" lon="138.292617">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:27:26Z</time>
+ <name>AM0034</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.100490" lon="138.292617">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:27:36Z</time>
+ <name>AM0035</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.100970" lon="138.292832">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:27:46Z</time>
+ <name>AM0036</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.101451" lon="138.293304">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:27:56Z</time>
+ <name>AM0037</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.102000" lon="138.293776">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:28:06Z</time>
+ <name>AM0038</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.102652" lon="138.294162">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:28:16Z</time>
+ <name>AM0039</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.102893" lon="138.294849">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:28:26Z</time>
+ <name>AM0040</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.103614" lon="138.295450">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:28:36Z</time>
+ <name>AM0041</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.103991" lon="138.295578">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:28:46Z</time>
+ <name>AM0042</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.103750" lon="138.295064">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:28:56Z</time>
+ <name>蓼科山</name>
+ <cmt>標高=2531m</cmt>
+ <sym>Summit</sym>
+ <extensions>
+ <kashmir3d:icon>952015</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.104026" lon="138.295578">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:29:06Z</time>
+ <name>AM0044</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.104678" lon="138.296136">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:29:16Z</time>
+ <name>AM0045</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.105251" lon="138.295823">
+ <ele>2361.140000</ele>
+ <time>2018-07-01T20:29:26Z</time>
+ <name>No. 1</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.106120" lon="138.296780">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:29:36Z</time>
+ <name>AM0047</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.106704" lon="138.297424">
+ <ele>-0.001000</ele>
+ <time>2018-07-01T20:29:46Z</time>
+ <name>AM0048</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+<rtept lat="36.107358" lon="138.298496">
+ <ele>2370.270000</ele>
+ <time>2018-07-01T20:29:56Z</time>
+ <name>No. 5</name>
+ <extensions>
+ <kashmir3d:icon>903001</kashmir3d:icon>
+ </extensions>
+</rtept>
+</rte>
+</gpx>

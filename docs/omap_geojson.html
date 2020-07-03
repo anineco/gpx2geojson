@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>ルート地図</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css">
+    <style>
+      body {
+        margin: 0;
+      }
+      #map {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+    <script>
+      const param = {
+        lon: 139.435076, lat: 36.354746, zoom: 15,
+        url: '200411/decimate.geojson'
+      };
+
+      const view = new ol.View({
+        center: ol.proj.fromLonLat([param.lon, param.lat]),
+        zoom: param.zoom,
+        minZoom: 5,
+        maxZoom: 18
+      });
+
+      const std = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+          attributions: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>',
+          url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'
+        })
+      });
+
+      const fill = new ol.style.Fill({ color: 'blue' });
+      const stroke = new ol.style.Stroke({ color: 'white', width: 2 });
+
+      function styleFunction(feature) {
+        let style;
+        const type = feature.getGeometry().getType();
+        if (type === 'LineString') {
+          const color = feature.get('_color').match(/^#(..)(..)(..)$/).slice(1).map(h => parseInt(h, 16));
+          color[3] = feature.get('_opacity');
+          style = {
+            stroke: new ol.style.Stroke({
+              color: color,
+              width: feature.get('_weight'),
+              lineDash: feature.get('_dashArray').split(',')
+            })
+          };
+        } else if (type === 'Point') {
+          style = {
+            image: new ol.style.Icon({
+              src: feature.get('_iconUrl'),
+              size: feature.get('_iconSize'),
+              anchor: feature.get('_iconAnchor'),
+              anchorXUnits: 'pixels',
+              anchorYUnits: 'pixels',
+              crossOrigin: 'Anonymous'
+            }),
+            text: new ol.style.Text({
+              text: feature.get('name'),
+              font: '14px sans-serif',
+              fill: fill,
+              stroke: stroke,
+              textAlign: 'left',
+              offsetX: 10,
+              offsetY: -10
+            })
+          };
+        }
+        return new ol.style.Style(style);
+      };
+
+      const track = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          url: param.url,
+          format: new ol.format.GeoJSON()
+        }),
+        style: styleFunction
+      });
+
+      const map = new ol.Map({
+        target: 'map',
+        layers: [std, track],
+        view: view
+      });
+    </script>
+  </body>
+</html>
