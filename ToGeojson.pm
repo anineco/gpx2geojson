@@ -81,12 +81,12 @@ sub convert {
     features => []
   };
 
-	# Waypoint
+  # Waypoint
   foreach my $wpt (@{$gpx->{gpx}[0]->{wpt}}) {
     push @{$geojson->{features}}, get_point_feature($wpt);
   }
 
-	# Route
+  # Route
   foreach my $rte (@{$gpx->{gpx}[0]->{rte}}) {
     foreach my $rtept (@{$rte->{rtept}}) {
       next if (Extensions::icon($rtept) eq '903001'); # skip blank icon
@@ -96,7 +96,7 @@ sub convert {
     push @{$geojson->{features}}, get_linestring_feature($rte, 'rtept', $properties);
   }
 
-	# Track
+  # Track
   foreach my $trk (@{$gpx->{gpx}[0]->{trk}}) {
     my $properties = get_linestring_properties($trk);
     foreach my $trkseg (@{$trk->{trkseg}}) {
