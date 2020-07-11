@@ -1,157 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-  <Document>
-    <Placemark>
+  <Document><Style id="N952014">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952014.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N952015">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952015.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N954025">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/954025.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N951005">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/951005.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="id00001">
+      <LineStyle>
+        <color>7fff0000</color>
+        <width>3</width>
+      </LineStyle>
+    </Style><Style id="id00002">
+      <LineStyle>
+        <color>7f0000ff</color>
+        <width>3</width>
+      </LineStyle>
+    </Style><Placemark>
       <Point>
         <coordinates>139.434786,36.337881</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;駐車&lt;/td&gt;&lt;td&gt;8台&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>駐車</td><td>8台</td></tr></table>]]></description>
       <name>足利公園</name>
       <styleUrl>#N954025</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.435203,36.337233</coordinates>
       </Point>
       <name>第２号墳</name>
       <styleUrl>#N952014</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.434467,36.339033</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;93m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>93m</td></tr></table>]]></description>
       <name>水道山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.428731,36.341503</coordinates>
       </Point>
       <name>稲荷神社</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.428881,36.342828</coordinates>
       </Point>
       <name>石碑</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.427831,36.342014</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;96m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>96m</td></tr></table>]]></description>
       <name>立岩山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.423647,36.345186</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;81m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>81m</td></tr></table>]]></description>
       <name>愛宕山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.426089,36.348533</coordinates>
       </Point>
       <name>船頭山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.426706,36.349272</coordinates>
       </Point>
       <name>天神様</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.425583,36.352594</coordinates>
       </Point>
       <name>琴平山</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.426481,36.354331</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;160m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>160m</td></tr></table>]]></description>
       <name>湯殿山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.429794,36.358783</coordinates>
       </Point>
       <name>山神社</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.426406,36.362642</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;297m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>297m</td></tr></table>]]></description>
       <name>野山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.432106,36.368222</coordinates>
       </Point>
       <name>障子岩</name>
       <styleUrl>#N952014</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.437928,36.372144</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;417m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>417m</td></tr></table>]]></description>
       <name>大岩山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.447061,36.365014</coordinates>
       </Point>
       <name>展望岩場</name>
       <styleUrl>#N952014</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.448056,36.359033</coordinates>
       </Point>
       <name>雷電神社分岐</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.448003,36.353542</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;251m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>251m</td></tr></table>]]></description>
       <name>両崖山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.441158,36.353775</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;259m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>259m</td></tr></table>]]></description>
       <name>天狗山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>139.437736,36.343428</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;154m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>154m</td></tr></table>]]></description>
       <name>須永山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <LineString>
         <coordinates>139.434785,36.337881
 139.435203,36.337233
@@ -314,8 +331,7 @@
       </LineString>
       <name>大岩山（往路）</name>
       <styleUrl>#id00001</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <LineString>
         <coordinates>139.437927,36.372145
 139.438003,36.372298
@@ -428,55 +444,5 @@
       </LineString>
       <name>大岩山（復路）</name>
       <styleUrl>#id00002</styleUrl>
-    </Placemark>
-    <Style id="N952015">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952015.png</href>
-        </Icon>
-        <hotSpot x="0.5" xunits="fraction" y="0.5" yunits="fraction" />
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N954025">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/954025.png</href>
-        </Icon>
-        <hotSpot x="0.5" xunits="fraction" y="0.5" yunits="fraction" />
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N952014">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952014.png</href>
-        </Icon>
-        <hotSpot x="0.5" xunits="fraction" y="0.5" yunits="fraction" />
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N951005">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/951005.png</href>
-        </Icon>
-        <hotSpot x="0.5" xunits="fraction" y="0.5" yunits="fraction" />
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="id00001">
-      <LineStyle>
-        <color>7fff0000</color>
-        <width>3</width>
-      </LineStyle>
-    </Style>
-    <Style id="id00002">
-      <LineStyle>
-        <color>7f0000ff</color>
-        <width>3</width>
-      </LineStyle>
-    </Style>
-    <name>GPS Track Log</name>
-  </Document>
+    </Placemark></Document>
 </kml>

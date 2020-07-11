@@ -79,7 +79,6 @@ sub convert {
     $s->{id} = $id;
     $s->{IconStyle}[0]->{scale}[0] = 1;
     $s->{IconStyle}[0]->{Icon}[0]->{href}[0] = $using{$id};
-    $s->{IconStyle}[0]->{hotSpot} = { x => 0.5, y => 0.5, xunits => 'fraction', yunits => 'fraction' }; # ext. of KMP
     push @{$style}, $s;
   }
 

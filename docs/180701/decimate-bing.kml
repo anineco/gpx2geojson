@@ -1,148 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-  <Document>
-    <Placemark>
+  <Document><Style id="id00001">
+      <LineStyle>
+        <color>7f000080</color>
+        <width>2</width>
+      </LineStyle>
+    </Style><Style id="N951005">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/951005.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N951004">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/951004.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N952015">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952015.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N954025">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/954025.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="id00002">
+      <LineStyle>
+        <color>7f0000ff</color>
+        <width>2</width>
+      </LineStyle>
+    </Style><Placemark>
       <Point>
         <coordinates>138.291831,36.083228</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;駐車&lt;/td&gt;&lt;td&gt;5台&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>駐車</td><td>5台</td></tr></table>]]></description>
       <name>竜源橋登山口</name>
       <styleUrl>#N954025</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.321833,36.095967</coordinates>
       </Point>
       <name>亀甲池</name>
       <styleUrl>#N951004</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.304883,36.111336</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;2380m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>2380m</td></tr></table>]]></description>
       <name>佐久市最高地点</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.298472,36.107319</coordinates>
       </Point>
       <name>将軍平</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.308817,36.097867</coordinates>
       </Point>
       <name>将軍平分岐</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.327808,36.107083</coordinates>
       </Point>
       <name>石祠</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.301733,36.110933</coordinates>
       </Point>
       <name>赤谷分岐</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.325786,36.108231</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;2224m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>2224m</td></tr></table>]]></description>
       <name>双子山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.331203,36.099828</coordinates>
       </Point>
       <name>双子池</name>
       <styleUrl>#N951004</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.319625,36.112361</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;2090m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>2090m</td></tr></table>]]></description>
       <name>大河原峠</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.330400,36.090983</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;2382m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>2382m</td></tr></table>]]></description>
       <name>大岳</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.329497,36.091872</coordinates>
       </Point>
       <name>大岳分岐</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.327322,36.096700</coordinates>
       </Point>
       <name>天狗の露地</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.313211,36.099617</coordinates>
       </Point>
       <name>天祥寺原</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.320078,36.087467</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;2480m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>2480m</td></tr></table>]]></description>
       <name>北横岳</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.281075,36.084192</coordinates>
       </Point>
       <name>蓼科山登山口</name>
       <styleUrl>#N951005</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.280719,36.085053</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;駐車&lt;/td&gt;&lt;td&gt;30台&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>駐車</td><td>30台</td></tr></table>]]></description>
       <name>蓼科山登山口駐車場</name>
       <styleUrl>#N954025</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.290858,36.093725</coordinates>
       </Point>
       <name>2114m三角点</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <Point>
         <coordinates>138.295064,36.103750</coordinates>
       </Point>
-      <description>&lt;table&gt;&lt;tr&gt;&lt;td&gt;標高&lt;/td&gt;&lt;td&gt;2531m&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description>
+      <description><![CDATA[<table><tr><td>標高</td><td>2531m</td></tr></table>]]></description>
       <name>蓼科山</name>
       <styleUrl>#N952015</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <LineString>
         <coordinates>138.280723,36.085073
 138.280558,36.084800
@@ -196,8 +214,7 @@
       </LineString>
       <name>蓼科山</name>
       <styleUrl>#id00001</styleUrl>
-    </Placemark>
-    <Placemark>
+    </Placemark><Placemark>
       <LineString>
         <coordinates>138.298471,36.107320
 138.298435,36.107271
@@ -558,51 +575,5 @@
       </LineString>
       <name>蓼科山～北横岳</name>
       <styleUrl>#id00002</styleUrl>
-    </Placemark>
-    <Style id="id00001">
-      <LineStyle>
-        <color>7f000080</color>
-        <width>2</width>
-      </LineStyle>
-    </Style>
-    <Style id="N951005">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/951005.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N951004">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/951004.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N952015">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952015.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N954025">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/954025.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="id00002">
-      <LineStyle>
-        <color>7f0000ff</color>
-        <width>2</width>
-      </LineStyle>
-    </Style>
-    <name>GPS Track Log</name>
-  </Document>
+    </Placemark></Document>
 </kml>
