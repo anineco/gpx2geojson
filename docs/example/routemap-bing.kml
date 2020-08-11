@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-  <Document><Style id="N952014">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952014.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style><Style id="N952015">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952015.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style><Style id="N954025">
+  <Document><Style id="N954025">
       <IconStyle>
         <Icon>
           <href>https://map.jpn.org/icon/954025.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N952014">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952014.png</href>
         </Icon>
         <scale>1</scale>
       </IconStyle>
@@ -25,6 +18,13 @@
       <IconStyle>
         <Icon>
           <href>https://map.jpn.org/icon/951005.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style><Style id="N952015">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952015.png</href>
         </Icon>
         <scale>1</scale>
       </IconStyle>

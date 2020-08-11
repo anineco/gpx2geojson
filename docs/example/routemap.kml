@@ -429,22 +429,6 @@
       <name>大岩山（復路）</name>
       <styleUrl>#id00002</styleUrl>
     </Placemark>
-    <Style id="N952014">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952014.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
-    <Style id="N952015">
-      <IconStyle>
-        <Icon>
-          <href>https://map.jpn.org/icon/952015.png</href>
-        </Icon>
-        <scale>1</scale>
-      </IconStyle>
-    </Style>
     <Style id="N954025">
       <IconStyle>
         <Icon>
@@ -453,10 +437,26 @@
         <scale>1</scale>
       </IconStyle>
     </Style>
+    <Style id="N952014">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952014.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style>
     <Style id="N951005">
       <IconStyle>
         <Icon>
           <href>https://map.jpn.org/icon/951005.png</href>
+        </Icon>
+        <scale>1</scale>
+      </IconStyle>
+    </Style>
+    <Style id="N952015">
+      <IconStyle>
+        <Icon>
+          <href>https://map.jpn.org/icon/952015.png</href>
         </Icon>
         <scale>1</scale>
       </IconStyle>
