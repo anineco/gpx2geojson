@@ -38,7 +38,7 @@ sub set_properties {
 
 sub point_feature {
   my ($placemark, $style, $id) = @_;
-  $id =~ m/^N([0-9]{6})$/;
+  $id =~ m/^N([0-9]{6})$/ or die;
   my $icon = $1;
   my ($lon,$lat,$alt) = split /,/, $placemark->{Point}->{coordinates};
   my $feature = {
@@ -61,7 +61,7 @@ sub point_feature {
 
 sub linestring_feature {
   my ($placemark, $style) = @_;
-  $style->{LineStyle}->{color} =~ /^(..)(..)(..)(..)$/;
+  $style->{LineStyle}->{color} =~ /^(..)(..)(..)(..)$/ or die;
   my $color = "#$4$3$2";
 # my $opacity = hex($1) / 255.0;
   my $opacity = 0.5; # NOTE: set proper value

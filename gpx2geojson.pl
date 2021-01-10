@@ -50,7 +50,7 @@ use ToKml;
 require IconLut;
 require Gpsbabel;
 
-my $version = "1.0";
+my $version = "1.1";
 
 our %param = (
   line_style => 0,
@@ -164,6 +164,7 @@ sub decimate_gpx {
 my $outfile = '';
 
 sub convert {
+  $n_point = 0;
   my $gpx = read_gpxfiles(@_);
   if ($param{xt_state}) {
     decimate_gpx($gpx);
