@@ -50,7 +50,7 @@ use ToKml;
 require IconLut;
 require Gpsbabel;
 
-my $version = "1.1";
+my $version = "1.2";
 
 our %param = (
   line_style => 0,
@@ -300,8 +300,9 @@ $top->Entry(
 $top->Button(
   -text => '選択',
   -command => sub {
+    my @type = grep { $_->[1] eq $param{outext} } @{$formats};
     my $ret = $top->getSaveFile(
-      -filetypes => [['GPXファイル', '.gpx'], ['KMLファイル', '.kml'], ['GeoJSONファイル', '.geojson'], ['すべて', '*']],
+      -filetypes => [[$type[0]->[0] . 'ファイル', $param{outext}], ['すべて', '*']],
       -initialdir => $param{outdir} || $param{indir},
       -initialfile => 'routemap' . $param{outext},
       -defaultextension => $param{outext}
