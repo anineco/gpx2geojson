@@ -111,7 +111,6 @@ sub read_gpxfiles {
   return $gpx;
 }
 
-
 # decimate track points in a segment using gpsbabel
 
 my $n_point; # number of track points after conversion
@@ -127,7 +126,7 @@ sub decimate_trkseg {
     open(my $out, '>', $tmp1);
     $xs->XMLout($xml, OutputFile => $out);
     close($out);
-    my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx -F $tmp2";
+    my $cmd = "gpsbabel -t -i gpx -f $tmp1 -x simplify,error=$param{xt_error}k -o gpx,gpxver=1.1 -F $tmp2";
 
     # since system($cmd) opens annoying console window, call gpsbabel.exe directly
     my $exe = Gpsbabel::exe();
@@ -138,7 +137,7 @@ sub decimate_trkseg {
     $xml = $xs->XMLin($tmp2);
     unlink $tmp1, $tmp2;
   } else {
-    my $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx -F -";
+    my $cmd = "gpsbabel -t -i gpx -f - -x simplify,error=$param{xt_error}k -o gpx,gpxver=1.1 -F -";
     open2(my $in, my $out, $cmd);
     $xs->XMLout($xml, OutputFile => $out);
     close($out);
