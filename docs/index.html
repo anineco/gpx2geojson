@@ -12,20 +12,21 @@
 <div id="contents">
 <div class="menu">
 <ul>
-<li><a href="https://anineco.nyanta.jp/">電脳覚書</a> &gt;</li>
-<li><a href="https://anineco.nyanta.jp/bbs/">掲示板</a> |</li>
+<li><a href="https://anineco.sakura.ne.jp/wiki/">電脳覚書</a> &gt;</li>
+<li><a href="https://anineco.sakura.ne.jp/bbs/">掲示板</a> |</li>
 <li><a href="https://github.com/anineco/gpx2geojson">GitHub</a> |</li>
-<li><a href="https://anineco.nyanta.jp/gps-track-maps/">Web地図を利用したGPSログ表示</a></li>
+<li><a href="https://anineco.sakura.ne.jp/docs/gps-track-maps/">Web地図を利用したGPSログ表示</a></li>
 </ul>
 </div><!-- end menu -->
 <h1>GPX2GeoJSON（GPX→GeoJSONコンバータ）</h1>
 <ul>
+<li>更新情報（2021-03-01）：スクリプト言語をPerlからPython 3に変更した<a href="https://github.com/anineco/py-gpx2geojson">GPX2GeoJSON Ver. 2.0</a>を公開しています。今後はそちらをご利用ください。
 <li>更新情報（2020-07-07）：GPX2GeoJSON Ver. 1.0を公開。GPX、KMLファイル出力機能を追加。
 <img src="image/new.gif" alt="NEW" height="11" width="20"></li>
-<li>このサイトに関するご意見・ご質問・ご要望は、<a href="http://anineco.nyanta.jp/bbs/">サポート掲示板</a>へお願いします。</li>
+<li>このサイトに関するご意見・ご質問・ご要望は、<a href="http://anineco.sakura.ne.jp/bbs/">サポート掲示板</a>へお願いします。</li>
 </ul>
 <h2>GPX2GeoJSONとは？</h2>
-<p>GPX2GeoJSON（GPX→GeoJSONコンバータ）は、カシミール3Dで保存した<b>GPXファイル</b>（拡張子 .gpx）を、各種ウェブ地図に上乗せして表示できる<b>GeoJSONファイル</b>（拡張子 .geojson）に変換するデスクトップアプリケーションです。Windows 10、macOS、Linuxで動作します。2008年1月から公開している<a href="https://anineco.nyanta.jp/gpx2jsgi/gpx2jsgi.html">GPX2JSGI</a>（GPX→KMLコンバータ）と同様、作者のホームページ（<a href="https://anineco.org/">あにねこ登山日誌</a>）の山行記録に添えるルート地図を作成するためのユーティリティとして開発したものです。当初は上乗せデータとしてJSGIファイル、2013年12月からはKMLファイルを利用していましたが、主流になりつつあるGeoJSONファイルへ2019年2月に移行しました。その際に、コンセプトはGPX2JSGIから引き継ぎつつ、全く新規に開発したアプリケーションです。Ver. 1.0より、KMLファイルやGPXファイルの出力機能を追加しました。</p>
+<p>GPX2GeoJSON（GPX→GeoJSONコンバータ）は、カシミール3Dで保存した<b>GPXファイル</b>（拡張子 .gpx）を、各種ウェブ地図に上乗せして表示できる<b>GeoJSONファイル</b>（拡張子 .geojson）に変換するデスクトップアプリケーションです。Windows 10、macOS、Linuxで動作します。2008年1月から公開している<a href="https://anineco.sakura.ne.jp/docs/gpx2jsgi/gpx2jsgi.html">GPX2JSGI</a>（GPX→KMLコンバータ）と同様、作者のホームページ（<a href="https://anineco.org/">あにねこ登山日誌</a>）の山行記録に添えるルート地図を作成するためのユーティリティとして開発したものです。当初は上乗せデータとしてJSGIファイル、2013年12月からはKMLファイルを利用していましたが、主流になりつつあるGeoJSONファイルへ2019年2月に移行しました。その際に、コンセプトはGPX2JSGIから引き継ぎつつ、全く新規に開発したアプリケーションです。Ver. 1.0より、KMLファイルやGPXファイルの出力機能を追加しました。</p>
 <h3>主な機能と特徴</h3>
 <ul>
 <li>カシミール3Dで保存したGPXファイルを、国土地理院が提案する<a href="https://github.com/gsi-cyberjapan/geojson-with-style-spec">スタイルつきGeoJSON規約</a>に準拠したGeoJSONファイル、または<a href="https://maps.gsi.go.jp/development/sakuzu_siyou.html">KMLウェブ地図プロファイル</a>に準拠したKMLファイルに変換します。</li>
@@ -97,7 +98,7 @@ gpx2geojson
 <h3>変換実行</h3>
 <p>全ての必要項目を設定したのちに『変換』ボタンを押すと、変換結果が「出力ファイル」で指定したファイルに出力されます。変換が成功すると、変換後のトラックポイント数が「軌跡点数」の欄に表示されます。『終了』ボタンを押すと、プログラムを終了します。</p>
 <h2>変換仕様</h2>
-<p>変換仕様については、<a href="https://anineco.nyanta.jp/gpx2jsgi/gpx2jsgi.html">GPX2JSGI</a>の仕様をほぼそのまま踏襲しています。</p>
+<p>変換仕様については、<a href="https://anineco.sakura.ne.jp/docs/gpx2jsgi/gpx2jsgi.html">GPX2JSGI</a>の仕様をほぼそのまま踏襲しています。</p>
 <h3>ウェイポイント</h3>
 <p>カシミール3Dの「ウェイポイント/ルートポイントのプロパティ」（図5）の設定項目が、地理院地図でどのように表示されるかを説明します。</p>
 <p style="text-align:center;"><img src="image/wptprop.png" alt="図5" height="343" width="403"><br>図5 ウェイポイント/ルートポイントのプロパティ</p>
@@ -156,7 +157,7 @@ sub iconAnchor {
   </tbody>
 </table>
 <hr>
-<address>&copy; 2019-2020 <a href="https://anineco.nyanta.jp/">あにねこ電脳覚書</a></address>
+<address>&copy; 2019-2020 <a href="https://anineco.sakura.ne.jp/wiki/">あにねこ電脳覚書</a></address>
 </div><!-- #contents -->
 </body>
 </html>
